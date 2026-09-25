@@ -3,21 +3,32 @@ Task 4 — Chunking, embedding và indexing.
 
 - Đọc toàn bộ Markdown trong data/standardized/ (output của Task 3).
 - Chia văn bản bằng RecursiveCharacterTextSplitter (500 chars, overlap 50).
-- Embed chunks bằng đúng một provider/model: BAAI/bge-m3 (sentence-transformers,
-  CPU, local — không gọi API trả phí). Task 5 tái sử dụng ``embed_texts()``
-  nên cùng embedding space được đảm bảo.
-- Upsert vào ChromaDB persistent với cosine distance; ID ổn định nên chạy
-  lại không tạo dữ liệu trùng.
+- Embed chunks qua EXTERNAL EMBEDDING API (không dùng model local):
+  ``embed_texts()`` đứng sau một provider abstraction (``EmbeddingClient``)
+  đọc cấu hình từ biến môi trường. Hỗ trợ provider OpenAI-compatible
+  (OpenAI, Jina, gateway tương thích) và Gemini REST.
+- Upsert vào ChromaDB persistent với cosine distance; ID ổn định +
+  bỏ qua chunk đã index (cùng provider/model/nội dung) nên chạy lại
+  không tốn API call trùng và không tạo dữ liệu trùng.
 
 Mỗi document/chunk tuân thủ docs/MODULE_CONTRACTS.md.
+Task 5 sẽ tái sử dụng ``embed_texts()`` và ``get_collection()`` nên cùng
+embedding space được đảm bảo.
+
+KHÔNG commit API key. Key đọc từ biến môi trường và không bao giờ bị log.
 
 Chạy: ``python -m src.task4_chunking_indexing``
 """
 
+import hashlib
 import os
+import time
 from pathlib import Path
 
+from dotenv import load_dotenv
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+load_dotenv()  # repo .env (gitignored) supplies embedding API keys locally
 
 
 STANDARDIZED_DIR = Path(__file__).parent.parent / "data" / "standardized"
@@ -28,14 +39,201 @@ CHUNK_SIZE = 500
 CHUNK_OVERLAP = 50
 CHUNKING_METHOD = "recursive"
 
-EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "BAAI/bge-m3")
-EMBEDDING_DIM = 1024
+# --- Cấu hình embedding tập trung (provider ngoài, không model local) ---
+EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "openai").strip().lower()
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "").strip() or None
+EMBEDDING_API_BASE = os.getenv("EMBEDDING_API_BASE", "").strip() or None
+# Dimension thực tế do API trả về; resolve lúc runtime (không đoán trước).
+EMBEDDING_DIM = int(os.getenv("EMBEDDING_DIM", "0") or 0) or None
+
+EMBEDDING_TIMEOUT_S = float(os.getenv("EMBEDDING_TIMEOUT_S", "60"))
+EMBEDDING_MAX_ATTEMPTS = int(os.getenv("EMBEDDING_MAX_ATTEMPTS", "4"))
+EMBEDDING_BATCH_SIZE = int(os.getenv("EMBEDDING_BATCH_SIZE", "32"))
 
 COLLECTION_NAME = "rag_documents"
 
 _VALID_DOC_TYPES = {"legal", "news"}
 
-_model = None
+_PROVIDER_DEFAULTS = {
+    "openai": {
+        "api_base": "https://api.openai.com/v1",
+        "model": "text-embedding-3-small",
+        "key_vars": ("OPENAI_API_KEY", "EMBEDDING_API_KEY"),
+    },
+    "jina": {
+        "api_base": "https://api.jina.ai/v1",
+        "model": "jina-embeddings-v3",
+        "key_vars": ("JINA_API_KEY", "EMBEDDING_API_KEY"),
+    },
+    "gemini": {
+        "api_base": "https://generativelanguage.googleapis.com/v1beta",
+        "model": "text-embedding-004",
+        "key_vars": ("GEMINI_API_KEY", "EMBEDDING_API_KEY"),
+    },
+}
+
+_client = None
+_resolved_dim = EMBEDDING_DIM
+_api_batches = 0
+
+
+class EmbeddingError(RuntimeError):
+    """Lỗi provider embedding (thông điệp chứa provider, không chứa key)."""
+
+
+def _resolve_api_key(provider: str) -> str:
+    key_vars = _PROVIDER_DEFAULTS[provider]["key_vars"]
+    for var in key_vars:
+        value = (os.getenv(var) or "").strip()
+        if value:
+            return value
+    raise EmbeddingError(
+        f"Missing API key for embedding provider={provider!r}. "
+        f"Set one of: {', '.join(key_vars)} (never commit keys)."
+    )
+
+
+def _post_json(url: str, payload: dict, headers: dict,
+               timeout_s: float) -> dict:
+    """POST JSON với retry/backoff cho lỗi transient (429/5xx)."""
+    import requests
+
+    global _api_batches
+    attempt = 0
+    wait_s = 1.0
+    last_error = "unknown error"
+    while attempt < EMBEDDING_MAX_ATTEMPTS:
+        attempt += 1
+        try:
+            response = requests.post(url, json=payload, headers=headers,
+                                     timeout=timeout_s)
+        except requests.RequestException as exc:
+            last_error = f"connection error: {type(exc).__name__}"
+        else:
+            if response.status_code == 200:
+                _api_batches += 1
+                return response.json()
+            if response.status_code in (429, 500, 502, 503, 504):
+                retry_after = response.headers.get("Retry-After")
+                try:
+                    wait_s = min(float(retry_after), 30.0)
+                except (TypeError, ValueError):
+                    pass
+                last_error = f"HTTP {response.status_code} (transient)"
+            else:
+                detail = (response.text or "")[:300]
+                raise EmbeddingError(
+                    f"Embedding API error provider={EMBEDDING_PROVIDER!r} "
+                    f"HTTP {response.status_code}: {detail}"
+                )
+        if attempt >= EMBEDDING_MAX_ATTEMPTS:
+            break
+        time.sleep(wait_s)
+        wait_s = min(wait_s * 2, 30.0)
+    raise EmbeddingError(
+        f"Embedding API failed provider={EMBEDDING_PROVIDER!r} "
+        f"after {attempt} attempts: {last_error}"
+    )
+
+
+class EmbeddingClient:
+    """Boundary provider-agnostic cho external embedding API.
+
+    Phần còn lại của Task 4 (và Task 5 sau này) chỉ gọi ``embed()``,
+    không cần biết provider cụ thể.
+    """
+
+    def __init__(self, provider: str | None = None,
+                 model: str | None = None,
+                 api_base: str | None = None) -> None:
+        name = (provider or EMBEDDING_PROVIDER).strip().lower()
+        if name not in _PROVIDER_DEFAULTS:
+            raise EmbeddingError(
+                f"Unknown EMBEDDING_PROVIDER={name!r} "
+                f"(expected one of {sorted(_PROVIDER_DEFAULTS)})"
+            )
+        defaults = _PROVIDER_DEFAULTS[name]
+        self.provider = name
+        self.model = (model or EMBEDDING_MODEL or defaults["model"]).strip()
+        self.api_base = (api_base or EMBEDDING_API_BASE
+                         or defaults["api_base"]).rstrip("/")
+        self.api_key = _resolve_api_key(name)
+
+    @property
+    def config_stamp(self) -> dict:
+        """Định danh cấu hình sinh vector (để Task 5 dùng đúng model)."""
+        return {"embedding_provider": self.provider,
+                "embedding_model": self.model}
+
+    def embed(self, texts: list[str]) -> list[list[float]]:
+        """Embed một batch, giữ thứ tự input/output, trả list[list[float]]."""
+        if not texts:
+            return []
+        vectors: list[list[float]] = []
+        for start in range(0, len(texts), EMBEDDING_BATCH_SIZE):
+            batch = texts[start:start + EMBEDDING_BATCH_SIZE]
+            if self.provider == "gemini":
+                vectors.extend(self._embed_gemini(batch))
+            else:
+                vectors.extend(self._embed_openai_compatible(batch))
+        if len(vectors) != len(texts):
+            raise EmbeddingError(
+                f"Embedding count mismatch provider={self.provider!r}: "
+                f"{len(vectors)} != {len(texts)}"
+            )
+        dims = {len(row) for row in vectors}
+        if len(dims) != 1:
+            raise EmbeddingError(
+                f"Inconsistent embedding dimensions: {sorted(dims)}"
+            )
+        global _resolved_dim
+        _resolved_dim = next(iter(dims))
+        return vectors
+
+    def _embed_openai_compatible(self, batch: list[str]) -> list[list[float]]:
+        data = _post_json(
+            f"{self.api_base}/embeddings",
+            {"model": self.model, "input": batch},
+            {"Authorization": f"Bearer {self.api_key}",
+             "Content-Type": "application/json"},
+            EMBEDDING_TIMEOUT_S,
+        )
+        items = data.get("data", []) if isinstance(data, dict) else []
+        ordered = sorted(items, key=lambda row: row.get("index", 0))
+        result = []
+        for row in ordered:
+            values = row.get("embedding", [])
+            result.append([float(x) for x in values])
+        return result
+
+    def _embed_gemini(self, batch: list[str]) -> list[list[float]]:
+        data = _post_json(
+            f"{self.api_base}/models/{self.model}:batchEmbedContents",
+            {"requests": [
+                {"model": f"models/{self.model}",
+                 "content": {"parts": [{"text": text}]},
+                 "taskType": "RETRIEVAL_DOCUMENT"}
+                for text in batch
+            ]},
+            {"x-goog-api-key": self.api_key,
+             "Content-Type": "application/json"},
+            EMBEDDING_TIMEOUT_S,
+        )
+        items = data.get("embeddings", []) if isinstance(data, dict) else []
+        return [[float(x) for x in row.get("values", [])] for row in items]
+
+
+def get_embedding_client() -> EmbeddingClient:
+    """Singleton client — không reload/khởi tạo lại mỗi lần gọi."""
+    global _client
+    if _client is None:
+        _client = EmbeddingClient()
+    return _client
+
+
+def get_api_batch_count() -> int:
+    """Số HTTP request embedding đã thực hiện trong tiến trình này."""
+    return _api_batches
 
 
 def _parse_frontmatter(path: Path) -> tuple[dict, str]:
@@ -123,32 +321,17 @@ def chunk_documents(documents: list[dict]) -> list[dict]:
     return chunks
 
 
-def _get_model():
-    """Load một lần duy nhất; tái sử dụng cho mọi lần embed (kể cả Task 5)."""
-    global _model
-    if _model is None:
-        from sentence_transformers import SentenceTransformer
-
-        _model = SentenceTransformer(EMBEDDING_MODEL, device="cpu")
-    return _model
-
-
 def embed_texts(texts: list[str]) -> list[list[float]]:
-    """Embed một batch văn bản; trả về đúng số vector, cùng dimension."""
+    """Embed một batch văn bản qua external API; cùng dimension, đúng số lượng.
+
+    Task 5 tái sử dụng hàm này nên query và document dùng chung
+    embedding space.
+    """
     if not texts:
         return []
-    model = _get_model()
-    vectors = model.encode(texts, batch_size=32, normalize_embeddings=True,
-                           show_progress_bar=False)
-    result = [list(map(float, row)) for row in vectors]
-    if len(result) != len(texts):
-        raise ValueError(
-            f"embed_texts count mismatch: {len(result)} != {len(texts)}"
-        )
-    dims = {len(row) for row in result}
-    if len(dims) != 1:
-        raise ValueError(f"Inconsistent embedding dimensions: {dims}")
-    return result
+    if any(not isinstance(t, str) or not t.strip() for t in texts):
+        raise ValueError("embed_texts: all inputs must be non-empty strings")
+    return get_embedding_client().embed(texts)
 
 
 def embed_chunks(chunks: list[dict]) -> list[dict]:
@@ -163,9 +346,15 @@ def embed_chunks(chunks: list[dict]) -> list[dict]:
         raise ValueError(f"Inconsistent embedding dimensions: {dims}")
     for chunk, vector in zip(chunks, vectors):
         chunk["embedding"] = vector
+    client = get_embedding_client()
     print(f"Embedded {len(chunks)} chunks "
-          f"(model={EMBEDDING_MODEL}, dim={len(vectors[0])})")
+          f"(provider={client.provider}, model={client.model}, "
+          f"dim={len(vectors[0])})")
     return chunks
+
+
+def _content_sha1(content: str) -> str:
+    return hashlib.sha1(content.encode("utf-8")).hexdigest()
 
 
 def _chroma_metadata(metadata: dict) -> dict:
@@ -200,37 +389,81 @@ def get_collection():
     )
 
 
+def _plan_indexing(chunks: list[dict], collection) -> tuple[list[dict], int]:
+    """Chỉ embed/upsert chunk mới hoặc đổi nội dung/provider/model.
+
+    Trả về (chunks_cần_xử_lý, số_chunk_bỏ_qua). Đọc state hiện có trong
+    Chroma nên chạy lại trên corpus không đổi tốn 0 API call.
+    """
+    client = get_embedding_client()
+    stamp = client.config_stamp
+    ids = [chunk["id"] for chunk in chunks]
+    stored: dict[str, dict] = {}
+    for start in range(0, len(ids), 500):
+        part = ids[start:start + 500]
+        if not part:
+            continue
+        got = collection.get(ids=part, include=["metadatas"])
+        for item_id, meta in zip(got.get("ids", []), got.get("metadatas", [])):
+            stored[item_id] = meta or {}
+    pending, skipped = [], 0
+    for chunk in chunks:
+        meta = stored.get(chunk["id"])
+        if (meta and meta.get("embedding_provider") == stamp["embedding_provider"]
+                and meta.get("embedding_model") == stamp["embedding_model"]
+                and meta.get("content_sha1") == _content_sha1(chunk["content"])):
+            skipped += 1
+        else:
+            pending.append(chunk)
+    return pending, skipped
+
+
 def index_to_vectorstore(chunks: list[dict]) -> None:
     """Upsert chunks vào ChromaDB (idempotent — chạy lại không trùng)."""
     collection = get_collection()
-    batch = 100
-    for start in range(0, len(chunks), batch):
-        part = chunks[start:start + batch]
-        collection.upsert(
-            ids=[chunk["id"] for chunk in part],
-            documents=[chunk["content"] for chunk in part],
-            embeddings=[chunk["embedding"] for chunk in part],
-            metadatas=[_chroma_metadata(chunk["metadata"]) for chunk in part],
-        )
-    print(f"Upserted {len(chunks)} chunks into '{COLLECTION_NAME}' "
-          f"(count={collection.count()})")
+    client = get_embedding_client()
+    pending, skipped = _plan_indexing(chunks, collection)
+    if pending:
+        embedded = embed_chunks(pending)
+        batch = 100
+        for start in range(0, len(embedded), batch):
+            part = embedded[start:start + batch]
+            collection.upsert(
+                ids=[chunk["id"] for chunk in part],
+                documents=[chunk["content"] for chunk in part],
+                embeddings=[chunk["embedding"] for chunk in part],
+                metadatas=[{**_chroma_metadata(chunk["metadata"]),
+                            "content_sha1": _content_sha1(chunk["content"]),
+                            **client.config_stamp}
+                           for chunk in part],
+            )
+    try:
+        collection.modify(metadata={"hnsw:space": "cosine",
+                                    **client.config_stamp,
+                                    "embedding_dimension": str(_resolved_dim or "")})
+    except Exception:
+        pass
+    print(f"Upserted {len(pending)} chunks into '{COLLECTION_NAME}' "
+          f"(skipped already-indexed={skipped}, count={collection.count()})")
 
 
 def run_pipeline() -> None:
     """Chạy load, chunk, embed và index."""
     documents = load_documents()
     chunks = chunk_documents(documents)
-    embedded_chunks = embed_chunks(chunks)
-    index_to_vectorstore(embedded_chunks)
+    index_to_vectorstore(chunks)
 
-    ids = [chunk["id"] for chunk in embedded_chunks]
-    dims = {len(chunk["embedding"]) for chunk in embedded_chunks}
+    client = get_embedding_client()
     collection = get_collection()
+    ids = [chunk["id"] for chunk in chunks]
     print("Documents loaded:", len(documents))
     print("Chunks created:", len(chunks))
     print("Unique chunk IDs:", len(set(ids)))
-    print("Embedding model:", EMBEDDING_MODEL)
-    print("Embedding dimension:", next(iter(dims)))
+    print("Embedding provider:", client.provider)
+    print("Embedding model:", client.model)
+    print("Embedding dimension:", _resolved_dim)
+    print("External embedding API batches:", get_api_batch_count())
+    print("Chroma persistence path:", CHROMA_DIR)
     print("Chroma collection:", COLLECTION_NAME)
     print("Collection count:", collection.count())
     print("Duplicate chunk IDs:", len(ids) - len(set(ids)))

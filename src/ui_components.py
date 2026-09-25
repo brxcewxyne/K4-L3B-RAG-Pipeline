@@ -151,8 +151,7 @@ def user_message_html(content: str) -> str:
     )
 
 
-def assistant_message_html(
-    answer_markdown: str,
+def assistant_message_html(    answer_markdown: str,
     sources: list[dict] | None = None,
     *,
     retrieval_method: str = "hybrid (demo)",
@@ -178,3 +177,162 @@ def assistant_message_html(
         f"{sources_block}"
         "</div>"
     )
+
+
+# ---------------------------------------------------------------------------
+# Retrieval-flow tab (UI preview only — renders a trace dict, never computes
+# Dense/BM25/RRF itself). Backend contract: src.ui_backend.get_retrieval_trace
+# ---------------------------------------------------------------------------
+
+def flow_banner_html() -> str:
+    return (
+        "<div class='flow-banner'>"
+        "<span class='mock-tag'>UI PREVIEW</span>"
+        "<span class='flow-banner-text'>Demo retrieval trace — "
+        "backend <b>chưa kết nối</b> (Tasks 5–7 chưa triển khai). "
+        "Mọi kết quả dưới đây là dữ liệu minh họa.</span>"
+        "</div>"
+    )
+
+
+def flow_section_html(title: str, hint: str = "") -> str:
+    safe = html.escape(title)
+    sub = f"<div class='flow-hint'>{html.escape(hint)}</div>" if hint else ""
+    return f"<div class='flow-section'><span>{safe}</span></div>{sub}"
+
+
+def flow_diagram_html() -> str:
+    return (
+        "<div class='flow-diagram'>"
+        "<div class='flow-node flow-node-query'>User Query</div>"
+        "<div class='flow-arrow'>↓</div>"
+        "<div class='flow-branches'>"
+        "<div class='flow-branch'>"
+        "<div class='flow-node'>Dense</div>"
+        "<div class='flow-sub'>query embedding → ChromaDB → cosine</div>"
+        "</div>"
+        "<div class='flow-branch'>"
+        "<div class='flow-node'>BM25</div>"
+        "<div class='flow-sub'>query tokens → BM25 index → lexical score</div>"
+        "</div>"
+        "</div>"
+        "<div class='flow-merge'>↘&nbsp;&nbsp;chạy song song&nbsp;&nbsp;↙</div>"
+        "<div class='flow-node flow-node-rrf'>RRF Fusion</div>"
+        "<div class='flow-arrow'>↓</div>"
+        "<div class='flow-node'>Final ranked chunks → LLM Context</div>"
+        "</div>"
+    )
+
+
+def flow_query_html(query: str) -> str:
+    return (
+        "<div class='flow-query'>"
+        "<span class='flow-query-label'>QUERY</span>"
+        f"<span class='flow-query-text'>{html.escape(query or '—')}</span>"
+        "</div>"
+    )
+
+
+def _flow_row(rank: int, title: str, chunk_id: str, score_html: str,
+              meta_html: str, extra_html: str = "") -> str:
+    return (
+        "<div class='flow-row'>"
+        f"<div class='flow-rank'>#{int(rank)}</div>"
+        "<div class='flow-body'>"
+        f"<div class='src-title'>{html.escape(title)}</div>"
+        f"<div class='flow-chunk-id'>{html.escape(chunk_id)}</div>"
+        f"<div class='flow-scores'>{score_html}</div>"
+        f"<div class='flow-meta'>{meta_html}</div>"
+        f"{extra_html}"
+        "</div>"
+        "</div>"
+    )
+
+
+def dense_panel_html(results: list[dict]) -> str:
+    rows = []
+    for item in results or []:
+        score = item.get("score", 0.0)
+        try:
+            score_text = f"{float(score):.4f}"
+        except (TypeError, ValueError):
+            score_text = str(score)
+        meta = " · ".join(str(item.get(k, "—")) for k in
+                          ("source", "language", "authority_level"))
+        preview = html.escape(str(item.get("preview", "")))
+        extra = (f"<details class='flow-preview'><summary>Xem chunk</summary>"
+                 f"<div>{preview}</div></details>" if preview else "")
+        rows.append(_flow_row(
+            item.get("rank", 0), str(item.get("title", "—")),
+            str(item.get("chunk_id", "—")),
+            f"<span class='flow-score-chip'>cosine similarity = "
+            f"<b>{score_text}</b></span>",
+            html.escape(meta), extra))
+    return ("<div class='flow-panel'><div class='flow-panel-head'>DENSE "
+            "— tương đồng ngữ nghĩa (cosine similarity)</div>"
+            + "".join(rows) + "</div>" if rows else
+            "<div class='flow-empty'>Chưa có kết quả Dense.</div>")
+
+
+def bm25_panel_html(results: list[dict]) -> str:
+    rows = []
+    for item in results or []:
+        score = item.get("score", 0.0)
+        try:
+            score_text = f"{float(score):.2f}"
+        except (TypeError, ValueError):
+            score_text = str(score)
+        terms = ", ".join(str(t) for t in item.get("matched_terms", []) or [])
+        extra = (f"<div class='flow-terms'>matched terms: "
+                 f"{html.escape(terms)}</div>" if terms else "")
+        rows.append(_flow_row(
+            item.get("rank", 0), str(item.get("title", "—")),
+            str(item.get("chunk_id", "—")),
+            f"<span class='flow-score-chip'>BM25 score = <b>{score_text}</b>"
+            f"</span>",
+            html.escape(str(item.get("source", "—"))), extra))
+    return ("<div class='flow-panel'><div class='flow-panel-head'>BM25 "
+            "— liên quan từ vựng (lexical relevance)</div>"
+            + "".join(rows) + "</div>" if rows else
+            "<div class='flow-empty'>Chưa có kết quả BM25.</div>")
+
+
+def rrf_panel_html(results: list[dict]) -> str:
+    rows = []
+    for item in results or []:
+        score = item.get("rrf_score", 0.0)
+        try:
+            score_text = f"{float(score):.6f}"
+        except (TypeError, ValueError):
+            score_text = str(score)
+        dense_rank = item.get("dense_rank", "—")
+        bm25_rank = item.get("bm25_rank", "—")
+        rows.append(_flow_row(
+            item.get("final_rank", 0), str(item.get("title", "—")),
+            str(item.get("chunk_id", "—")),
+            f"<span class='flow-score-chip'>RRF score = <b>{score_text}</b>"
+            f"</span>",
+            html.escape(f"dense rank: {dense_rank} · "
+                        f"bm25 rank: {bm25_rank} · "
+                        f"{item.get('source', '—')}")))
+    return ("<div class='flow-panel'><div class='flow-panel-head'>RRF FUSION "
+            "— gộp thứ hạng (rank), không so sánh điểm thô</div>"
+            + "".join(rows) + "</div>" if rows else
+            "<div class='flow-empty'>Chưa có kết quả RRF.</div>")
+
+
+def selected_context_html(items: list[dict]) -> str:
+    rows = []
+    for item in items or []:
+        rows.append(
+            "<div class='flow-row'>"
+            f"<div class='flow-rank'>#{int(item.get('final_rank', 0))}</div>"
+            "<div class='flow-body'>"
+            f"<div class='src-title'>{html.escape(str(item.get('title', '—')))}</div>"
+            f"<div class='flow-chunk-id'>{html.escape(str(item.get('chunk_id', '—')))}</div>"
+            "</div>"
+            "</div>")
+    return ("<div class='flow-panel'><div class='flow-panel-head'>SELECTED "
+            "CONTEXT — chunks sẽ gửi cho LLM (Top-K)</div>"
+            + "".join(rows) + "</div>" if rows else
+            "<div class='flow-empty'>Chưa có context được chọn.</div>")

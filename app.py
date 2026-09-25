@@ -25,12 +25,20 @@ from pathlib import Path
 import streamlit as st
 from dotenv import load_dotenv
 
-from src.ui_backend import filter_sources, handle_query
+from src.ui_backend import filter_sources, get_retrieval_trace, handle_query
 from src.ui_components import (
     EXAMPLE_PROMPTS,
     assistant_message_html,
+    bm25_panel_html,
+    dense_panel_html,
+    flow_banner_html,
+    flow_diagram_html,
+    flow_query_html,
+    flow_section_html,
     portrait_html,
     retrieval_info_html,
+    rrf_panel_html,
+    selected_context_html,
     source_card_html,
     user_message_html,
 )
@@ -59,6 +67,8 @@ if "top_k" not in st.session_state:
     st.session_state.top_k = 5
 if "is_loading" not in st.session_state:
     st.session_state.is_loading = False
+if "flow_query" not in st.session_state:
+    st.session_state.flow_query = EXAMPLE_PROMPTS[0]
 
 # ---------------------------------------------------------------------------
 # Global dark PUBG/esports theme
@@ -203,6 +213,50 @@ button:focus-visible, textarea:focus-visible, input:focus-visible{
 /* Filter + footer */
 .filter-row{display:flex; align-items:center; gap:8px; padding:2px 6px 0; flex-wrap:wrap;}
 .filter-label{font-size:11px; letter-spacing:.16em; color:var(--faint); font-weight:800;}
+.flow-banner{display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+  background:var(--gold-soft); border:1px solid rgba(226,179,76,.45);
+  border-radius:14px; padding:12px 16px; margin:6px 0 14px;}
+.flow-banner-text{font-size:13.5px; color:#e6eaee;}
+.flow-section{margin:20px 0 4px; font-size:12px; letter-spacing:.22em;
+  color:var(--gold); font-weight:800;}
+.flow-hint{color:var(--muted); font-size:13px; margin:0 0 10px;}
+.flow-diagram{background:var(--panel); border:1px solid var(--line);
+  border-radius:16px; padding:18px; margin:4px 0 8px; text-align:center;}
+.flow-node{display:inline-block; background:#1a222b; border:1px solid var(--line);
+  border-radius:12px; padding:10px 18px; font-weight:800; font-size:14px; color:#fff;}
+.flow-node-query{border-color:rgba(226,179,76,.55); color:var(--gold);}
+.flow-node-rrf{border-color:rgba(226,179,76,.55); background:var(--gold-soft); color:var(--gold);}
+.flow-arrow{color:var(--faint); font-size:18px; margin:6px 0;}
+.flow-branches{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin:4px 0;}
+.flow-branch{flex:1 1 220px; max-width:340px; background:rgba(255,255,255,.02);
+  border:1px solid var(--line); border-radius:12px; padding:12px;}
+.flow-sub{color:var(--muted); font-size:12px; margin-top:6px;}
+.flow-merge{color:var(--gold); font-size:12.5px; letter-spacing:.08em; margin:8px 0 2px;}
+.flow-query{display:flex; gap:10px; align-items:baseline; flex-wrap:wrap;
+  background:var(--panel2); border:1px solid var(--line); border-radius:12px;
+  padding:11px 14px; margin:10px 0 4px;}
+.flow-query-label{font-size:11px; letter-spacing:.2em; color:var(--faint); font-weight:800;}
+.flow-query-text{font-size:15px; color:#fff; font-weight:600;}
+.flow-panel{background:rgba(255,255,255,.015); border:1px solid var(--line);
+  border-radius:14px; padding:12px 14px; margin:6px 0 4px;}
+.flow-panel-head{font-size:11.5px; letter-spacing:.18em; color:var(--muted);
+  font-weight:800; margin-bottom:10px;}
+.flow-row{display:flex; gap:12px; padding:10px 4px; border-top:1px solid var(--line-soft);}
+.flow-row:first-of-type{border-top:none;}
+.flow-rank{color:var(--gold); font-weight:800; font-size:15px; flex:0 0 44px;}
+.flow-body{min-width:0; flex:1;}
+.flow-chunk-id{font-size:12px; color:var(--faint); font-family:monospace;
+  word-break:break-all; overflow-wrap:anywhere; margin-top:2px;}
+.flow-scores{margin-top:6px;}
+.flow-score-chip{font-size:12.5px; color:#cfd6dd; background:#1a222b;
+  border:1px solid var(--line); border-radius:999px; padding:4px 11px;
+  display:inline-block;}
+.flow-score-chip b{color:var(--gold);}
+.flow-meta{font-size:12px; color:var(--muted); margin-top:6px;}
+.flow-preview{font-size:12.5px; color:var(--muted); margin-top:6px;}
+.flow-preview summary{cursor:pointer; color:#8fb8dd;}
+.flow-terms{font-size:12px; color:var(--muted); margin-top:6px;}
+.flow-empty{color:var(--faint); font-size:13px; padding:8px 0;}
 .pubg-footer{display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
   color:var(--faint); font-size:12px; padding:16px 6px 0;}
 .loading-dots{color:var(--gold); font-weight:700;}
@@ -246,6 +300,75 @@ def _process_query(raw_query: str) -> None:
     st.session_state.is_loading = False
 
 
+# ---------------------------------------------------------------------------
+# Retrieval-flow tab (UI preview only). Renders the trace dict from
+# src.ui_backend.get_retrieval_trace — currently DEMO data until Tasks 5-7
+# populate it. This function never computes Dense/BM25/RRF itself.
+# ---------------------------------------------------------------------------
+def _render_flow_tab() -> None:
+    st.markdown(flow_banner_html(), unsafe_allow_html=True)
+    st.markdown(flow_diagram_html(), unsafe_allow_html=True)
+
+    query = st.text_input(
+        "Câu hỏi để minh họa luồng truy xuất (demo — chưa chạy retrieval thật)",
+        value=st.session_state.flow_query,
+        max_chars=500,
+        key="flow_query_input",
+    )
+    if st.button("Xem luồng truy xuất (demo)", key="flow_run"):
+        st.session_state.flow_query = query
+
+    trace = get_retrieval_trace(st.session_state.flow_query,
+                                top_k=int(st.session_state.top_k))
+    st.markdown(flow_query_html(trace.get("query", "")), unsafe_allow_html=True)
+    st.markdown(
+        flow_section_html(
+            "A · TRUY XUẤT SONG SONG",
+            "Dense và BM25 chạy độc lập trên cùng query, mỗi nhánh có thang "
+            "điểm riêng — không so sánh điểm thô giữa hai nhánh.",
+        ),
+        unsafe_allow_html=True,
+    )
+    dense_col, bm25_col = st.columns(2, gap="medium")
+    with dense_col:
+        st.markdown(
+            dense_panel_html(trace.get("dense", {}).get("results", [])),
+            unsafe_allow_html=True,
+        )
+    with bm25_col:
+        st.markdown(
+            bm25_panel_html(trace.get("bm25", {}).get("results", [])),
+            unsafe_allow_html=True,
+        )
+    st.markdown(
+        flow_section_html(
+            "B · RRF FUSION",
+            "Gộp hai bảng xếp hạng theo rank (k=60) thành thứ hạng cuối cùng.",
+        ),
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        rrf_panel_html(trace.get("rrf", {}).get("results", [])),
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        flow_section_html(
+            "C · SELECTED CONTEXT",
+            "Top-K chunks sẽ được gửi cho LLM ở Task 9/10.",
+        ),
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        selected_context_html(trace.get("selected_context", [])),
+        unsafe_allow_html=True,
+    )
+    st.caption(
+        "Thang điểm: **cosine similarity** = tương đồng ngữ nghĩa (Dense) · "
+        "**BM25 score** = liên quan từ vựng · **RRF score** = điểm gộp hạng. "
+        "Tab này là preview giao diện — backend chưa kết nối."
+    )
+
+
 pending_example = None
 
 # ---------------------------------------------------------------------------
@@ -267,35 +390,55 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# ---------------------------------------------------------------------------
-# Main 3-column composition: TanVuu (LEFT) | Chat (CENTER) | Himass (RIGHT)
-# ---------------------------------------------------------------------------
-left_col, center_col, right_col = st.columns([1.02, 2.35, 1.02], gap="medium")
 
-with left_col:
-    st.markdown(
-        portrait_html(TANVU_IMG, name="TANVUU", subtitle="PUBG Player", side="left"),
-        unsafe_allow_html=True,
-    )
+chat_tab, flow_tab = st.tabs(["\U0001F4AC Trò chuyện", "\U0001F500 Luồng truy xuất"])  # Tab 2: retrieval-flow preview
 
-with right_col:
-    st.markdown(
-        portrait_html(HIMASS_IMG, name="HIMASS", subtitle="PUBG Player", side="right"),
-        unsafe_allow_html=True,
-    )
+with chat_tab:
+    # ---------------------------------------------------------------------------
+    # Main 3-column composition: TanVuu (LEFT) | Chat (CENTER) | Himass (RIGHT)
+    # ---------------------------------------------------------------------------
+    left_col, center_col, right_col = st.columns([1.02, 2.35, 1.02], gap="medium")
 
-with center_col:
-    st.markdown("<div class='center-wrap'><div class='chat-shell'>", unsafe_allow_html=True)
+    with left_col:
+        st.markdown(
+            portrait_html(TANVU_IMG, name="TANVUU", subtitle="PUBG Player", side="left"),
+            unsafe_allow_html=True,
+        )
 
-    # Source filter (UI-only, must not clutter)
-    st.markdown(
-        "<div class='filter-row'><span class='filter-label'>NGUỒN</span></div>",
-        unsafe_allow_html=True,
-    )
-    filt = st.session_state.source_filter
-    try:
-        if hasattr(st, "segmented_control"):
-            choice = st.segmented_control(
+    with right_col:
+        st.markdown(
+            portrait_html(HIMASS_IMG, name="HIMASS", subtitle="PUBG Player", side="right"),
+            unsafe_allow_html=True,
+        )
+
+    with center_col:
+        st.markdown("<div class='center-wrap'><div class='chat-shell'>", unsafe_allow_html=True)
+
+        # Source filter (UI-only, must not clutter)
+        st.markdown(
+            "<div class='filter-row'><span class='filter-label'>NGUỒN</span></div>",
+            unsafe_allow_html=True,
+        )
+        filt = st.session_state.source_filter
+        try:
+            if hasattr(st, "segmented_control"):
+                choice = st.segmented_control(
+                    "Nguồn",
+                    options=["all", "official", "independent"],
+                    format_func=lambda v: {
+                        "all": "Tất cả",
+                        "official": "Official",
+                        "independent": "Independent",
+                    }[v],
+                    default=filt,
+                    label_visibility="collapsed",
+                )
+                if choice:
+                    st.session_state.source_filter = choice
+            else:
+                raise AttributeError
+        except Exception:
+            choice = st.radio(
                 "Nguồn",
                 options=["all", "official", "independent"],
                 format_func=lambda v: {
@@ -303,141 +446,128 @@ with center_col:
                     "official": "Official",
                     "independent": "Independent",
                 }[v],
-                default=filt,
+                index=["all", "official", "independent"].index(filt),
+                horizontal=True,
                 label_visibility="collapsed",
             )
-            if choice:
-                st.session_state.source_filter = choice
-        else:
-            raise AttributeError
-    except Exception:
-        choice = st.radio(
-            "Nguồn",
-            options=["all", "official", "independent"],
-            format_func=lambda v: {
-                "all": "Tất cả",
-                "official": "Official",
-                "independent": "Independent",
-            }[v],
-            index=["all", "official", "independent"].index(filt),
-            horizontal=True,
-            label_visibility="collapsed",
-        )
-        st.session_state.source_filter = choice
+            st.session_state.source_filter = choice
 
-    st.markdown("<div class='chat-scroll'>", unsafe_allow_html=True)
+        st.markdown("<div class='chat-scroll'>", unsafe_allow_html=True)
 
-    if not st.session_state.messages:
-        # ---- Empty state ----
-        st.markdown(
-            """
-<div class="empty-hero">
-  <div class="empty-eyebrow">PUBG POLICY ASSISTANT</div>
-  <h2>Bạn muốn tìm hiểu điều gì về PUBG?</h2>
-  <p>Tra cứu quy tắc, án phạt, hỗ trợ người chơi và các nguồn liên quan.</p>
-</div>
-""",
-            unsafe_allow_html=True,
-        )
-        eg_left, eg_right = st.columns(2, gap="small")
-        for i, prompt in enumerate(EXAMPLE_PROMPTS):
-            target_col = eg_left if i % 2 == 0 else eg_right
-            with target_col:
-                if st.button(
-                    prompt,
-                    key=f"example_{i}",
-                    use_container_width=True,
-                    disabled=st.session_state.is_loading,
-                ):
-                    pending_example = prompt
-        st.markdown(
-            "<div class='demo-note'>Các gợi ý trên chỉ là ví dụ giao diện — "
-            "chưa kết nối retrieval.</div>",
-            unsafe_allow_html=True,
-        )
-    else:
-        # ---- Conversation history ----
-        for msg in st.session_state.messages:
-            if msg.get("role") == "user":
-                st.markdown(user_message_html(msg.get("content", "")), unsafe_allow_html=True)
-            else:
-                st.markdown(
-                    "<div class='msg'><div class='msg-avatar msg-avatar-bot'>◈</div>"
-                    "<div style='flex:1; min-width:0;'>"
-                    "<div class='assistant-head'>"
-                    "<span class='assistant-name'>PUBG ASSISTANT</span>"
-                    "<span class='mock-tag'>UI PREVIEW · DEMO</span>"
-                    "</div>",
-                    unsafe_allow_html=True,
-                )
-                st.markdown(msg.get("content", ""))
-                visible_sources = filter_sources(
-                    msg.get("sources", []), st.session_state.source_filter
-                )
-                st.markdown(
-                    assistant_message_html(
-                        msg.get("content", ""),
-                        sources=visible_sources,
-                        retrieval_method=msg.get("retrieval_method", "hybrid (demo)"),
-                        is_mock=msg.get("is_mock", True),
-                    ),
-                    unsafe_allow_html=True,
-                )
-                st.markdown("</div></div>", unsafe_allow_html=True)
-
-        if st.session_state.is_loading:
+        if not st.session_state.messages:
+            # ---- Empty state ----
             st.markdown(
-                "<div class='loading-dots'>● ● ● đang soạn câu trả lời…</div>",
+                """
+    <div class="empty-hero">
+      <div class="empty-eyebrow">PUBG POLICY ASSISTANT</div>
+      <h2>Bạn muốn tìm hiểu điều gì về PUBG?</h2>
+      <p>Tra cứu quy tắc, án phạt, hỗ trợ người chơi và các nguồn liên quan.</p>
+    </div>
+    """,
                 unsafe_allow_html=True,
             )
+            eg_left, eg_right = st.columns(2, gap="small")
+            for i, prompt in enumerate(EXAMPLE_PROMPTS):
+                target_col = eg_left if i % 2 == 0 else eg_right
+                with target_col:
+                    if st.button(
+                        prompt,
+                        key=f"example_{i}",
+                        use_container_width=True,
+                        disabled=st.session_state.is_loading,
+                    ):
+                        pending_example = prompt
+            st.markdown(
+                "<div class='demo-note'>Các gợi ý trên chỉ là ví dụ giao diện — "
+                "chưa kết nối retrieval.</div>",
+                unsafe_allow_html=True,
+            )
+        else:
+            # ---- Conversation history ----
+            for msg in st.session_state.messages:
+                if msg.get("role") == "user":
+                    st.markdown(user_message_html(msg.get("content", "")), unsafe_allow_html=True)
+                else:
+                    st.markdown(
+                        "<div class='msg'><div class='msg-avatar msg-avatar-bot'>◈</div>"
+                        "<div style='flex:1; min-width:0;'>"
+                        "<div class='assistant-head'>"
+                        "<span class='assistant-name'>PUBG ASSISTANT</span>"
+                        "<span class='mock-tag'>UI PREVIEW · DEMO</span>"
+                        "</div>",
+                        unsafe_allow_html=True,
+                    )
+                    st.markdown(msg.get("content", ""))
+                    visible_sources = filter_sources(
+                        msg.get("sources", []), st.session_state.source_filter
+                    )
+                    st.markdown(
+                        assistant_message_html(
+                            msg.get("content", ""),
+                            sources=visible_sources,
+                            retrieval_method=msg.get("retrieval_method", "hybrid (demo)"),
+                            is_mock=msg.get("is_mock", True),
+                        ),
+                        unsafe_allow_html=True,
+                    )
+                    st.markdown("</div></div>", unsafe_allow_html=True)
 
-    st.markdown("</div>", unsafe_allow_html=True)  # close chat-scroll
+            if st.session_state.is_loading:
+                st.markdown(
+                    "<div class='loading-dots'>● ● ● đang soạn câu trả lời…</div>",
+                    unsafe_allow_html=True,
+                )
 
-    # ---- Composer ----
-    st.markdown("<div class='composer-zone'>", unsafe_allow_html=True)
-    with st.form(key="composer", clear_on_submit=True):
-        user_text = st.text_area(
-            "Nhập câu hỏi",
-            placeholder="Hỏi về PUBG...",
-            height=88,
-            max_chars=2000,
-            label_visibility="collapsed",
-            disabled=st.session_state.is_loading,
-        )
-        send_col, clear_col, hint_col = st.columns([1, 1, 2.2], gap="small")
-        with send_col:
-            sent = st.form_submit_button(
-                "➤ Gửi",
-                type="primary",
-                use_container_width=True,
+        st.markdown("</div>", unsafe_allow_html=True)  # close chat-scroll
+
+        # ---- Composer ----
+        st.markdown("<div class='composer-zone'>", unsafe_allow_html=True)
+        with st.form(key="composer", clear_on_submit=True):
+            user_text = st.text_area(
+                "Nhập câu hỏi",
+                placeholder="Hỏi về PUBG...",
+                height=88,
+                max_chars=2000,
+                label_visibility="collapsed",
                 disabled=st.session_state.is_loading,
             )
-        with clear_col:
-            cleared = st.form_submit_button("✕ Xóa chat", use_container_width=True)
-        with hint_col:
-            st.caption("Enter để xuống dòng · Nhấn **Gửi** để hỏi (demo).")
-    with st.expander("Tùy chọn nâng cao (dành cho backend sau này)", expanded=False):
-        st.session_state.top_k = st.slider(
-            "Số chunks (top_k — hiện chưa dùng)",
-            3,
-            10,
-            int(st.session_state.top_k),
-            disabled=st.session_state.is_loading,
-        )
-    st.markdown("</div>", unsafe_allow_html=True)  # close composer-zone
-    st.markdown("</div></div>", unsafe_allow_html=True)  # close chat-shell + center-wrap
+            send_col, clear_col, hint_col = st.columns([1, 1, 2.2], gap="small")
+            with send_col:
+                sent = st.form_submit_button(
+                    "➤ Gửi",
+                    type="primary",
+                    use_container_width=True,
+                    disabled=st.session_state.is_loading,
+                )
+            with clear_col:
+                cleared = st.form_submit_button("✕ Xóa chat", use_container_width=True)
+            with hint_col:
+                st.caption("Enter để xuống dòng · Nhấn **Gửi** để hỏi (demo).")
+        with st.expander("Tùy chọn nâng cao (dành cho backend sau này)", expanded=False):
+            st.session_state.top_k = st.slider(
+                "Số chunks (top_k — hiện chưa dùng)",
+                3,
+                10,
+                int(st.session_state.top_k),
+                disabled=st.session_state.is_loading,
+            )
+        st.markdown("</div>", unsafe_allow_html=True)  # close composer-zone
+        st.markdown("</div></div>", unsafe_allow_html=True)  # close chat-shell + center-wrap
 
-    # ---- Event handling (after render declarations, same run) ----
-    if cleared:
-        st.session_state.messages = []
-        st.session_state.is_loading = False
-        st.rerun()
-    if sent and (user_text or "").strip():
-        _process_query(user_text)
-        st.rerun()
-    if pending_example:
-        _process_query(pending_example)
-        st.rerun()
+        # ---- Event handling (after render declarations, same run) ----
+        if cleared:
+            st.session_state.messages = []
+            st.session_state.is_loading = False
+            st.rerun()
+        if sent and (user_text or "").strip():
+            _process_query(user_text)
+            st.rerun()
+        if pending_example:
+            _process_query(pending_example)
+            st.rerun()
+
+with flow_tab:
+    _render_flow_tab()
 
 # ---------------------------------------------------------------------------
 # Minimal footer / status
