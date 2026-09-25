@@ -258,3 +258,39 @@ def test_task9_pageindex_error_falls_through(monkeypatch):
     assert out["chunks"] == hybrid
     assert out["retrieval_source"] == "hybrid"
     assert out["retrieval_trace"]["fallback"]["pageindex_error"] is True
+
+
+def test_normalize_live_provider_shape(monkeypatch, isolated):
+    """Regression: observed live shape uses id/nested lists/section_title.
+
+    No numeric page is provided (physical_index is a literal placeholder),
+    so page must be omitted, never invented.
+    """
+    from src.contracts import validate_search_results
+
+    entry = {**task8.PAGEINDEX_DOCUMENTS[0],
+             "pageindex_document_id": "pi-live"}
+    node = {"id": "0006",
+            "title": "1) KHÔNG SỬ DỤNG CHƯƠNG TRÌNH TRÁI PHÉP",
+            "metadata": ["pi-live", "pubg_rules_of_conduct_vi.pdf"],
+            "relevant_contents": [[
+                {"section_title": "1) KHÔNG SỬ DỤNG CHƯƠNG TRÌNH TRÁI PHÉP",
+                 "physical_index": "<physical_index_2>",
+                 "relevant_content": "KRAFTON cấm sử dụng trái phép"}]]}
+    item = task8._normalize_node(entry, node, 1)
+    assert item is not None
+    assert item["id"] == "pageindex::pubg_rules_of_conduct_vi::0006"
+    assert item["retrieval_method"] == "pageindex"
+    assert "KRAFTON cấm sử dụng trái phép" in item["content"]
+    assert item["metadata"]["section"].startswith("1) KHÔNG SỬ DỤNG")
+    assert "page" not in item["metadata"]
+    validate_search_results([item])
+
+
+def test_poll_rejects_unexpected_shape(monkeypatch, isolated):
+    class _Client:
+        def get_retrieval(self, retrieval_id):
+            return ["not", "a", "dict"]
+
+    with pytest.raises(task8.PageIndexError, match="unexpected shape"):
+        task8._poll_retrieval(_Client(), "r-1", timeout_s=1, poll_s=0)

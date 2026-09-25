@@ -1,0 +1,28 @@
+{
+  "documents": {
+    "pubg_rules_of_conduct_vi": {
+      "local_path": "data/landing/legal/pubg_rules_of_conduct_vi.pdf",
+      "source_url": "https://www.pubg.com/vi/clause/rules_of_conduct/label_steam/latest",
+      "pageindex_document_id": "pi-cmuhafv3j003e09ny6ebwh5jc",
+      "content_hash": "8e197d1dc84de6f52556f2e19d219086421ffc34",
+      "indexed_at": "2026-09-25T18:22:56+00:00",
+      "status": "ready"
+    },
+    "pubg_terms_of_service_vi": {
+      "local_path": "data/landing/legal/pubg_terms_of_service_vi.pdf",
+      "source_url": "https://www.pubg.com/vi/clause/term_of_service/label_steam/latest",
+      "pageindex_document_id": "pi-cmuhaglfy001c0anyieqdg8iz",
+      "content_hash": "91713af7d990f2693851da04a0e65d467f10f1f2",
+      "indexed_at": "2026-09-25T18:23:30+00:00",
+      "status": "ready"
+    },
+    "pubg_privacy_policy_vi": {
+      "local_path": "data/landing/legal/pubg_privacy_policy_vi.pdf",
+      "source_url": "https://www.pubg.com/vi/clause/privacy_policy/label_steam/latest",
+      "pageindex_document_id": "pi-cmuhahbpt003g09nyl3c8qwk9",
+      "content_hash": "227ee99ea43eae7251eabb2ec8d6f4fbe6464901",
+      "indexed_at": "2026-09-25T18:23:48+00:00",
+      "status": "ready"
+    }
+  }
+}

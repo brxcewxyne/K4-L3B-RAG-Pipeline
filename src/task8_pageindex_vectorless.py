@@ -233,7 +233,13 @@ def _poll_retrieval(client, retrieval_id: str,
                 f"PageIndex get_retrieval failed: {type(exc).__name__}: "
                 f"{str(exc)[:200]}"
             ) from None
-        last_status = str(result.get("status", "")).lower()
+        last_status = str(result.get("status", "")).lower() if isinstance(
+            result, dict) else ""
+        if not isinstance(result, dict):
+            raise PageIndexError(
+                f"PageIndex retrieval unexpected shape "
+                f"retrieval_id={retrieval_id} (got {type(result).__name__})"
+            )
         if last_status == "completed":
             return result
         if last_status in ("failed", "error", "cancelled"):
@@ -275,11 +281,21 @@ def _normalize_node(entry: dict, node: dict, rank: int) -> dict | None:
     """
     if not isinstance(node, dict):
         return None
-    node_id = str(node.get("node_id") or f"node-{rank}")
+    # Provider field drift (legacy endpoint): node id may be "node_id" or
+    # "id"; relevant_contents may nest content blocks one list deeper.
+    node_id = str(node.get("node_id") or node.get("id") or f"node-{rank}")
     title = str(node.get("title") or entry["title"]).strip() or entry["title"]
+    raw_blocks = node.get("relevant_contents", []) or []
+    flat_blocks: list = []
+    for block in raw_blocks:
+        if isinstance(block, list):
+            flat_blocks.extend(block)
+        else:
+            flat_blocks.append(block)
     parts: list[str] = []
     pages: list[int] = []
-    for block in node.get("relevant_contents", []) or []:
+    sections: list[str] = []
+    for block in flat_blocks:
         if not isinstance(block, dict):
             continue
         text = str(block.get("relevant_content") or "").strip()
@@ -290,6 +306,11 @@ def _normalize_node(entry: dict, node: dict, rank: int) -> dict | None:
             continue
         if isinstance(page, (int, float)):
             pages.append(int(page))
+        # NOTE: provider "physical_index" is a literal placeholder string,
+        # not a page number — never mapped to page (no invented metadata).
+        section = str(block.get("section_title") or "").strip()
+        if section:
+            sections.append(section)
     if not parts:  # fallback các field text thô nếu provider đổi shape
         for field in ("text", "markdown", "content"):
             text = str(node.get(field) or "").strip()
@@ -319,7 +340,9 @@ def _normalize_node(entry: dict, node: dict, rank: int) -> dict | None:
     }
     if pages:
         metadata["page"] = min(pages)
-    if node.get("title"):
+    if sections:
+        metadata["section"] = sections[0]
+    elif node.get("title"):
         metadata["section"] = str(node["title"])
     return {
         "id": f"pageindex::{entry['key']}::{node_id}",

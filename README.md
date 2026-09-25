@@ -165,7 +165,7 @@ Trạng thái hiện tại: **87 passed, 0 failed**.
 
 ## Hạn chế đã biết
 
-- Kiểm chứng PageIndex live qua API chưa thực hiện vì chưa cấu hình `PAGEINDEX_API_KEY`; code + unit test (mock) đã hoàn chỉnh, PageIndex là tùy chọn khi reproduce.
+- PageIndex live đã kiểm chứng: 3 PDF chính sách index thành công (`data/pageindex_registry.json`), truy vấn A/B/C trả về đúng section, fallback Task 9 → Task 10 chạy end-to-end. Cần `PAGEINDEX_API_KEY` trong `.env` để reproduce; không có key thì dùng unit test (mock).
 - Một số trang hỗ trợ PUBG có thể trả HTTP 403 khi crawl lại; corpus trong repo đã đầy đủ.
 - Ngưỡng fallback `0.5728` hiệu chỉnh riêng cho corpus/mẫu hiện tại; đổi corpus, chunking hoặc embedding model thì cần hiệu chỉnh lại.
 - Đánh giá semantic cần `OPENAI_API_KEY` (judge + generation).
