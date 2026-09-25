@@ -38,6 +38,9 @@ htmlcov/
 # Temp PDF conversion cache
 data/_tmp_pdf/
 
+# Local vector store (Task 4 output, rebuilt via pipeline)
+chroma_db/
+
 # Temp / cache
 .pytest_cache/
 *.tmp

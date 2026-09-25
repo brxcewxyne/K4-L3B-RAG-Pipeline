@@ -423,6 +423,7 @@ def index_to_vectorstore(chunks: list[dict]) -> None:
     collection = get_collection()
     client = get_embedding_client()
     pending, skipped = _plan_indexing(chunks, collection)
+    embedded: list[dict] = []
     if pending:
         embedded = embed_chunks(pending)
         batch = 100
@@ -437,12 +438,28 @@ def index_to_vectorstore(chunks: list[dict]) -> None:
                             **client.config_stamp}
                            for chunk in part],
             )
+    # Stamp collection config (hnsw:space is immutable after creation,
+    # so it is only set in get_or_create, never here).
+    dim = str(len(embedded[0]["embedding"]) if embedded else "")
+    if not dim:
+        try:
+            dim = str((collection.metadata or {}).get("embedding_dimension", ""))
+        except Exception:
+            dim = ""
+    if not dim and collection.count():
+        # Self-heal: measure one already-stored vector (skip-all reruns).
+        try:
+            peek = collection.get(limit=1, include=["embeddings"])
+            vecs = (peek or {}).get("embeddings", [])
+            if len(vecs):
+                dim = str(len(vecs[0]))
+        except Exception:
+            dim = ""
     try:
-        collection.modify(metadata={"hnsw:space": "cosine",
-                                    **client.config_stamp,
-                                    "embedding_dimension": str(_resolved_dim or "")})
-    except Exception:
-        pass
+        collection.modify(metadata={**client.config_stamp,
+                                    "embedding_dimension": dim})
+    except Exception as exc:
+        print(f"Warning: could not stamp collection metadata: {exc}")
     print(f"Upserted {len(pending)} chunks into '{COLLECTION_NAME}' "
           f"(skipped already-indexed={skipped}, count={collection.count()})")
 
@@ -456,12 +473,18 @@ def run_pipeline() -> None:
     client = get_embedding_client()
     collection = get_collection()
     ids = [chunk["id"] for chunk in chunks]
+    dim = _resolved_dim
+    if dim is None:
+        try:
+            dim = (collection.metadata or {}).get("embedding_dimension") or None
+        except Exception:
+            dim = None
     print("Documents loaded:", len(documents))
     print("Chunks created:", len(chunks))
     print("Unique chunk IDs:", len(set(ids)))
     print("Embedding provider:", client.provider)
     print("Embedding model:", client.model)
-    print("Embedding dimension:", _resolved_dim)
+    print("Embedding dimension:", dim)
     print("External embedding API batches:", get_api_batch_count())
     print("Chroma persistence path:", CHROMA_DIR)
     print("Chroma collection:", COLLECTION_NAME)
