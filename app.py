@@ -301,25 +301,33 @@ def _process_query(raw_query: str) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Retrieval-flow tab (UI preview only). Renders the trace dict from
-# src.ui_backend.get_retrieval_trace — currently DEMO data until Tasks 5-7
-# populate it. This function never computes Dense/BM25/RRF itself.
+# Retrieval-flow tab renders live Tasks 5-7 through src.ui_backend.
+# This function never computes Dense/BM25/RRF itself.
 # ---------------------------------------------------------------------------
 def _render_flow_tab() -> None:
-    st.markdown(flow_banner_html(), unsafe_allow_html=True)
     st.markdown(flow_diagram_html(), unsafe_allow_html=True)
 
     query = st.text_input(
-        "Câu hỏi để minh họa luồng truy xuất (demo — chưa chạy retrieval thật)",
+        "Câu hỏi truy xuất Dense / BM25 / RRF",
         value=st.session_state.flow_query,
         max_chars=500,
         key="flow_query_input",
     )
-    if st.button("Xem luồng truy xuất (demo)", key="flow_run"):
+    if st.button("Xem luồng truy xuất", key="flow_run"):
         st.session_state.flow_query = query
 
-    trace = get_retrieval_trace(st.session_state.flow_query,
-                                top_k=int(st.session_state.top_k))
+    trace_key = (st.session_state.flow_query, int(st.session_state.top_k))
+    if st.session_state.get("flow_trace_key") != trace_key:
+        try:
+            with st.spinner("Đang truy xuất Dense / BM25 / RRF…"):
+                trace = get_retrieval_trace(*trace_key)
+        except Exception:
+            st.error("Truy xuất thất bại. Kiểm tra kết nối embedding API và ChromaDB rồi thử lại.")
+            return
+        st.session_state.flow_trace = trace
+        st.session_state.flow_trace_key = trace_key
+    trace = st.session_state.flow_trace
+    st.markdown(flow_banner_html(is_mock=trace["is_mock"]), unsafe_allow_html=True)
     st.markdown(flow_query_html(trace.get("query", "")), unsafe_allow_html=True)
     st.markdown(
         flow_section_html(
@@ -365,7 +373,7 @@ def _render_flow_tab() -> None:
     st.caption(
         "Thang điểm: **cosine similarity** = tương đồng ngữ nghĩa (Dense) · "
         "**BM25 score** = liên quan từ vựng · **RRF score** = điểm gộp hạng. "
-        "Tab này là preview giao diện — backend chưa kết nối."
+        "Dữ liệu thật từ collection rag_documents."
     )
 
 
@@ -383,7 +391,7 @@ st.markdown(
     <p class="pubg-sub">Quy tắc · Án phạt · Hỗ trợ · Vụ việc</p>
   </div>
   <div class="pubg-badges">
-    <span class="badge badge-preview">UI Preview</span>
+    <span class="badge badge-preview">Chat Preview · Live Retrieval</span>
   </div>
 </div>
 """,
@@ -575,7 +583,7 @@ with flow_tab:
 st.markdown(
     """
 <div class="pubg-footer">
-  <span>◈ UI Preview — backend RAG chưa hoạt động. Mọi câu trả lời &amp; nguồn hiện tại đều là demo.</span>
+  <span>◈ Chat: UI Preview · Luồng truy xuất: Dense / BM25 / RRF thật.</span>
   <span>Kết nối sau tại <code>src/task10_generation:generate_with_citation</code> qua <code>src/ui_backend.ask_question</code></span>
 </div>
 """,

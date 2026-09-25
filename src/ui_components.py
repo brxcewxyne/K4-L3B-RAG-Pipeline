@@ -180,11 +180,14 @@ def assistant_message_html(    answer_markdown: str,
 
 
 # ---------------------------------------------------------------------------
-# Retrieval-flow tab (UI preview only — renders a trace dict, never computes
+# Retrieval-flow tab (renders a trace dict, never computes
 # Dense/BM25/RRF itself). Backend contract: src.ui_backend.get_retrieval_trace
 # ---------------------------------------------------------------------------
 
-def flow_banner_html() -> str:
+def flow_banner_html(*, is_mock: bool = True) -> str:
+    if not is_mock:
+        return ("<div class='flow-banner'><span class='flow-banner-text'>"
+                "LIVE · Dense + BM25 + RRF · rag_documents</span></div>")
     return (
         "<div class='flow-banner'>"
         "<span class='mock-tag'>UI PREVIEW</span>"
@@ -216,7 +219,7 @@ def flow_diagram_html() -> str:
         "<div class='flow-sub'>query tokens → BM25 index → lexical score</div>"
         "</div>"
         "</div>"
-        "<div class='flow-merge'>↘&nbsp;&nbsp;chạy song song&nbsp;&nbsp;↙</div>"
+        "<div class='flow-merge'>↘&nbsp;&nbsp;hai nhánh độc lập&nbsp;&nbsp;↙</div>"
         "<div class='flow-node flow-node-rrf'>RRF Fusion</div>"
         "<div class='flow-arrow'>↓</div>"
         "<div class='flow-node'>Final ranked chunks → LLM Context</div>"

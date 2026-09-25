@@ -1,20 +1,4 @@
-"""UI-only placeholder backend boundary for the PUBG RAG chatbot.
-
-STRICT SCOPE: frontend shell only. Do NOT implement retrieval, embeddings,
-BM25, RRF, LLM generation, or evaluation here.
-
-The real backend (Tasks 5-10) will replace :func:`ask_question` later with
-something equivalent to::
-
-    from src.task10_generation import generate_with_citation
-
-    def ask_question(query: str, top_k: int = 5) -> dict:
-        return generate_with_citation(query, top_k=top_k)
-
-Until then, :func:`handle_query` / :func:`ask_question` return clearly
-labelled mock data so the UI states (empty / loading / answer / sources)
-can be demonstrated without implying a live RAG pipeline.
-"""
+"""Chat preview and live Task 5-7 retrieval adapter."""
 
 from __future__ import annotations
 
@@ -30,15 +14,11 @@ from __future__ import annotations
 BACKEND_CONNECTED: bool = False
 BACKEND_ENTRYPOINT: str = "src.task10_generation:generate_with_citation"
 
-# Retrieval-flow trace boundary (future Tasks 5-7).
+# Retrieval-flow trace boundary (Tasks 5-7).
 # get_retrieval_trace() renders the [Query -> Dense + BM25 -> RRF -> Context]
-# debug tab. It returns DEMO data until the real retrieval pipeline exists.
-TRACE_BACKEND_CONNECTED: bool = False
-TRACE_ENTRYPOINT: str = (
-    "src.task9_retrieval_pipeline:retrieve "
-    "(+ src.task5_semantic_search, src.task6_lexical_search, "
-    "src.task7_reranking)"
-)
+# debug tab using the existing Task 4 corpus.
+TRACE_BACKEND_CONNECTED: bool = True
+TRACE_ENTRYPOINT: str = "semantic_search + lexical_search + rerank_rrf"
 
 
 def _demo_sources() -> list[dict]:
@@ -113,83 +93,57 @@ def filter_sources(sources: list[dict], source_filter: str) -> list[dict]:
     return list(sources)
 
 
-def _demo_trace(query: str, top_k: int) -> dict:
-    """Clearly-labelled dummy retrieval trace for the flow tab (UI preview).
-
-    Shape is the contract future Tasks 5-7 will populate — layers stay
-    separate (dense ranks, bm25 ranks, rrf fusion, selected context).
-    Scores across branches are NOT comparable; each panel labels its own
-    metric (cosine similarity vs BM25 score vs RRF score).
-    """
-    _ = top_k
-    cleaned = (query or "").strip() or "Stream sniping có vi phạm luật PUBG không?"
-    dense = [
-        {"chunk_id": "pubg_rules_of_conduct_vi::chunk-12",
-         "title": "Quy tắc ứng xử PUBG (demo)",
-         "source": "KRAFTON, Inc.", "language": "vi",
-         "authority_level": "primary", "score": 0.82, "rank": 1,
-         "preview": "Không sử dụng các chương trình hoặc thiết bị phần cứng trái phép…"},
-        {"chunk_id": "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-3",
-         "title": "Thông báo kết quả điều tra PUBG Asia Stars (demo)",
-         "source": "PUBG / KRAFTON", "language": "vi",
-         "authority_level": "primary", "score": 0.76, "rank": 2,
-         "preview": "Hành vi sử dụng thông tin bên ngoài game (stream sniping)…"},
-        {"chunk_id": "justice_for_himass_tanvuu_vi::chunk-1",
-         "title": "Justice for Himass & TanVuu (demo)",
-         "source": "Independent source", "language": "vi",
-         "authority_level": "secondary", "score": 0.61, "rank": 3,
-         "preview": "Yêu cầu xem xét lại mức độ xử lý, bảo đảm quy trình công bằng…"},
-    ]
-    bm25 = [
-        {"chunk_id": "pubg_rules_of_conduct_vi::chunk-12",
-         "title": "Quy tắc ứng xử PUBG (demo)",
-         "source": "KRAFTON, Inc.", "score": 7.42, "rank": 1,
-         "matched_terms": ["stream", "sniping", "gian lận"]},
-        {"chunk_id": "pubg_report_cheating_bug_abuse_vi::chunk-0",
-         "title": "How to report cheating/hacking (demo)",
-         "source": "PUBG Support", "score": 5.18, "rank": 2,
-         "matched_terms": ["report", "cheating"]},
-        {"chunk_id": "pubg_ban_penalty_information_vi::chunk-2",
-         "title": "I want to know more about bans (demo)",
-         "source": "PUBG Support", "score": 3.96, "rank": 3,
-         "matched_terms": ["ban"]},
-    ]
-    rrf = [
-        {"chunk_id": "pubg_rules_of_conduct_vi::chunk-12",
-         "title": "Quy tắc ứng xử PUBG (demo)",
-         "source": "KRAFTON, Inc.", "rrf_score": round(1 / 61 + 1 / 61, 6),
-         "dense_rank": 1, "bm25_rank": 1, "final_rank": 1},
-        {"chunk_id": "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-3",
-         "title": "Thông báo kết quả điều tra PUBG Asia Stars (demo)",
-         "source": "PUBG / KRAFTON", "rrf_score": round(1 / 62, 6),
-         "dense_rank": 2, "bm25_rank": None, "final_rank": 2},
-        {"chunk_id": "pubg_report_cheating_bug_abuse_vi::chunk-0",
-         "title": "How to report cheating/hacking (demo)",
-         "source": "PUBG Support", "rrf_score": round(1 / 62, 6),
-         "dense_rank": None, "bm25_rank": 2, "final_rank": 3},
-    ]
-    return {
-        "query": cleaned,
-        "dense": {"metric": "cosine similarity", "results": dense},
-        "bm25": {"metric": "BM25 score", "results": bm25},
-        "rrf": {"metric": "RRF score (k=60)",
-                "note": "RRF gộp thứ hạng (rank), không so sánh điểm thô "
-                        "giữa cosine và BM25.",
-                "results": rrf},
-        "selected_context": [
-            {"chunk_id": r["chunk_id"], "title": r["title"],
-             "final_rank": r["final_rank"]} for r in rrf
-        ],
-        "is_mock": True,
-        "backend_connected": False,
-    }
-
-
 def get_retrieval_trace(query: str, top_k: int = 5) -> dict:
-    """Return the retrieval trace for the flow tab (demo until Tasks 5-7).
+    """Run Tasks 5-7 against the existing Task 4 collection; never fake results."""
+    from src.task4_chunking_indexing import get_collection
+    from src.task5_semantic_search import semantic_search
+    from src import task6_lexical_search as lexical
+    from src.task7_reranking import rerank_rrf
 
-    FUTURE HOOK: build this dict from ``retrieve()`` +
-    per-branch ranks instead of :func:`_demo_trace`. Keep the same keys so
-    the tab renders without redesign.
-    """
-    return _demo_trace(query, top_k)
+    query = (query or "").strip()
+    if not query:
+        raise ValueError("Enter a retrieval query.")
+    if top_k < 1:
+        raise ValueError("top_k must be positive.")
+    collection = get_collection()
+    stored = collection.get(include=["documents", "metadatas"])
+    if not stored["ids"]:
+        raise ValueError("rag_documents is empty.")
+    lexical.CORPUS = [
+        {"id": cid, "content": content, "metadata": metadata or {}}
+        for cid, content, metadata in zip(
+            stored["ids"], stored["documents"], stored["metadatas"])
+    ]
+    depth = min(max(10, top_k), len(stored["ids"]))
+    dense = semantic_search(query, top_k=depth)
+    bm25 = lexical.lexical_search(query, top_k=depth)
+    fused = rerank_rrf([dense, bm25], top_k=top_k)
+    dense_ranks = {item["id"]: rank for rank, item in enumerate(dense, 1)}
+    bm25_ranks = {item["id"]: rank for rank, item in enumerate(bm25, 1)}
+
+    def fields(item):
+        metadata = item.get("metadata") or {}
+        return {"chunk_id": item["id"], "content": item["content"],
+                **{key: metadata[key] for key in
+                   ("title", "source", "language", "authority_level")
+                   if key in metadata}}
+
+    def ranked(items):
+        return [{**fields(item), "score": item["score"], "rank": rank,
+                 "preview": item["content"]}
+                for rank, item in enumerate(items, 1)]
+
+    return {
+        "query": query,
+        "dense": {"metric": "cosine similarity", "results": ranked(dense)},
+        "bm25": {"metric": "BM25 score", "results": ranked(bm25)},
+        "rrf": {"metric": "RRF score (k=60)", "results": [
+            {**fields(item), "rrf_score": item["score"], "final_rank": rank,
+             "dense_rank": dense_ranks.get(item["id"]),
+             "bm25_rank": bm25_ranks.get(item["id"])}
+            for rank, item in enumerate(fused, 1)]},
+        "selected_context": [{**fields(item), "final_rank": rank}
+                             for rank, item in enumerate(fused, 1)],
+        "is_mock": False,
+        "backend_connected": True,
+    }
