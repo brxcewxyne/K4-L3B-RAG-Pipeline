@@ -1,0 +1,462 @@
+{
+  "created_at": "2026-09-25T17:38:59+00:00",
+  "embedding_model": "text-embedding-3-small",
+  "score_semantics": "top-1 original Dense cosine score (1 - cosine distance, higher = more relevant)",
+  "num_in_domain": 16,
+  "num_out_of_domain": 16,
+  "selected_threshold": 0.5728,
+  "selection_method": "max balanced accuracy over observed score cutoffs; ties broken by F1, then recall, then widest-margin midpoint of the optimal gap",
+  "in_domain": {
+    "n": 16,
+    "min": 0.6028,
+    "max": 0.7973,
+    "mean": 0.6909,
+    "median": 0.6925,
+    "p10": 0.6075,
+    "p25": 0.6446,
+    "p75": 0.7293,
+    "p90": 0.7843
+  },
+  "out_of_domain": {
+    "n": 16,
+    "min": 0.251,
+    "max": 0.5428,
+    "mean": 0.4081,
+    "median": 0.439,
+    "p10": 0.2813,
+    "p25": 0.3065,
+    "p75": 0.4936,
+    "p90": 0.5246
+  },
+  "confusion_matrix": {
+    "tp": 16,
+    "fn": 0,
+    "tn": 16,
+    "fp": 0
+  },
+  "metrics": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "specificity": 1.0,
+    "f1": 1.0,
+    "balanced_accuracy": 1.0
+  },
+  "queries": [
+    {
+      "id": "q01",
+      "question": "Quy tắc ứng xử PUBG cấm những hành vi nào liên quan đến phần mềm hoặc thiết bị gian lận?",
+      "label": "in_domain",
+      "top1_score": 0.700299,
+      "top1_id": "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-11",
+      "top1_source": "PUBG / KRAFTON",
+      "top3_scores": [
+        0.700299,
+        0.69791,
+        0.612957
+      ]
+    },
+    {
+      "id": "q02",
+      "question": "Hành vi giết đồng đội (teamkill) trong PUBG bị xử phạt như thế nào?",
+      "label": "in_domain",
+      "top1_score": 0.610643,
+      "top1_id": "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-5",
+      "top1_source": "PUBG / KRAFTON",
+      "top3_scores": [
+        0.610643,
+        0.597456,
+        0.585545
+      ]
+    },
+    {
+      "id": "q03",
+      "question": "Khai thác lỗi (bug) trong trò chơi PUBG bị xử lý ra sao?",
+      "label": "in_domain",
+      "top1_score": 0.602807,
+      "top1_id": "pubg_rules_of_conduct_vi::chunk-0",
+      "top1_source": "KRAFTON, Inc.",
+      "top3_scores": [
+        0.602807,
+        0.587934,
+        0.576861
+      ]
+    },
+    {
+      "id": "q04",
+      "question": "Người chơi AFK trong trận đấu PUBG bị phạt thế nào?",
+      "label": "in_domain",
+      "top1_score": 0.638037,
+      "top1_id": "pubg_rules_of_conduct_vi::chunk-29",
+      "top1_source": "KRAFTON, Inc.",
+      "top3_scores": [
+        0.638037,
+        0.609609,
+        0.558946
+      ]
+    },
+    {
+      "id": "q05",
+      "question": "G-COIN trong PUBG là gì và chính sách hoàn tiền cho G-COIN ra sao?",
+      "label": "in_domain",
+      "top1_score": 0.67504,
+      "top1_id": "pubg_rules_of_conduct_vi::chunk-54",
+      "top1_source": "KRAFTON, Inc.",
+      "top3_scores": [
+        0.67504,
+        0.663745,
+        0.634619
+      ]
+    },
+    {
+      "id": "q06",
+      "question": "Điều khoản Dịch vụ PUBG quy định gì về giấy phép sử dụng trò chơi?",
+      "label": "in_domain",
+      "top1_score": 0.722177,
+      "top1_id": "pubg_terms_of_service_vi::chunk-0",
+      "top1_source": "KRAFTON, Inc.",
+      "top3_scores": [
+        0.722177,
+        0.646881,
+        0.646407
+      ]
+    },
+    {
+      "id": "q07",
+      "question": "KRAFTON thu thập và chia sẻ thông tin cá nhân của người chơi như thế nào?",
+      "label": "in_domain",
+      "top1_score": 0.695499,
+      "top1_id": "pubg_rules_of_conduct_vi::chunk-10",
+      "top1_source": "KRAFTON, Inc.",
+      "top3_scores": [
+        0.695499,
+        0.685225,
+        0.670446
+      ]
+    },
+    {
+      "id": "q08",
+      "question": "Người chơi có những quyền gì đối với dữ liệu cá nhân của mình trong PUBG?",
+      "label": "in_domain",
+      "top1_score": 0.646798,
+      "top1_id": "pubg_privacy_policy_vi::chunk-0",
+      "top1_source": "KRAFTON, Inc.",
+      "top3_scores": [
+        0.646798,
+        0.630779,
+        0.609974
+      ]
+    },
+    {
+      "id": "q09",
+      "question": "Himass và TanVuu bị xử lý vì hành vi gì tại PUBG Asia Stars 2026?",
+      "label": "in_domain",
+      "top1_score": 0.777036,
+      "top1_id": "justice_for_himass_tanvuu_vi::chunk-12",
+      "top1_source": "VnExpress",
+      "top3_scores": [
+        0.777036,
+        0.771905,
+        0.719436
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "Hình thức xử lý cụ thể mà KRAFTON áp dụng với Himass và TanVuu là gì?",
+      "label": "in_domain",
+      "top1_score": 0.604456,
+      "top1_id": "pubg_rules_of_conduct_vi::chunk-4",
+      "top1_source": "KRAFTON, Inc.",
+      "top3_scores": [
+        0.604456,
+        0.597866,
+        0.571869
+      ]
+    },
+    {
+      "id": "q11",
+      "question": "KRAFTON thừa nhận trách nhiệm gì trong khâu vận hành giải PUBG Asia Stars?",
+      "label": "in_domain",
+      "top1_score": 0.699609,
+      "top1_id": "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-14",
+      "top1_source": "PUBG / KRAFTON",
+      "top3_scores": [
+        0.699609,
+        0.650781,
+        0.623694
+      ]
+    },
+    {
+      "id": "q12",
+      "question": "Chiến dịch Justice for PUBG VN đòi hỏi điều gì?",
+      "label": "in_domain",
+      "top1_score": 0.653167,
+      "top1_id": "justice_for_himass_tanvuu_vi::chunk-7",
+      "top1_source": "VnExpress",
+      "top3_scores": [
+        0.653167,
+        0.649491,
+        0.642636
+      ]
+    },
+    {
+      "id": "q13",
+      "question": "How should I report a player who is cheating or hacking in PUBG?",
+      "label": "in_domain",
+      "top1_score": 0.797276,
+      "top1_id": "pubg_report_cheating_bug_abuse_vi::chunk-0",
+      "top1_source": "PUBG Support",
+      "top3_scores": [
+        0.797276,
+        0.719458,
+        0.680869
+      ]
+    },
+    {
+      "id": "q14",
+      "question": "If someone else uses cheats on my PUBG account, will I get banned?",
+      "label": "in_domain",
+      "top1_score": 0.791646,
+      "top1_id": "pubg_account_cheating_responsibility_vi::chunk-0",
+      "top1_source": "PUBG Support",
+      "top3_scores": [
+        0.791646,
+        0.49421,
+        0.488945
+      ]
+    },
+    {
+      "id": "q15",
+      "question": "How do I report a website or user selling cheats and hacks?",
+      "label": "in_domain",
+      "top1_score": 0.750804,
+      "top1_id": "pubg_report_cheat_seller_vi::chunk-0",
+      "top1_source": "PUBG Support",
+      "top3_scores": [
+        0.750804,
+        0.729156,
+        0.61782
+      ]
+    },
+    {
+      "id": "q16",
+      "question": "Which PUBG violations lead to a 30-day ban versus a permanent ban?",
+      "label": "in_domain",
+      "top1_score": 0.689451,
+      "top1_id": "pubg_ban_penalty_information_vi::chunk-1",
+      "top1_source": "PUBG Support",
+      "top3_scores": [
+        0.689451,
+        0.675759,
+        0.624693
+      ]
+    },
+    {
+      "id": "ood01",
+      "question": "Súng nào mạnh nhất trong PUBG hiện tại?",
+      "label": "out_of_domain",
+      "top1_score": 0.453226,
+      "top1_id": "justice_for_himass_tanvuu_vi::chunk-12",
+      "top1_source": "VnExpress",
+      "top3_scores": [
+        0.453226,
+        0.448423,
+        0.447551
+      ]
+    },
+    {
+      "id": "ood02",
+      "question": "M416 nên dùng attachment nào?",
+      "label": "out_of_domain",
+      "top1_score": 0.305063,
+      "top1_id": "pubg_rules_of_conduct_vi::chunk-47",
+      "top1_source": "KRAFTON, Inc.",
+      "top3_scores": [
+        0.305063,
+        0.297281,
+        0.289166
+      ]
+    },
+    {
+      "id": "ood03",
+      "question": "PUBG map nào dễ thắng nhất?",
+      "label": "out_of_domain",
+      "top1_score": 0.489772,
+      "top1_id": "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-2",
+      "top1_source": "PUBG / KRAFTON",
+      "top3_scores": [
+        0.489772,
+        0.448998,
+        0.444367
+      ]
+    },
+    {
+      "id": "ood04",
+      "question": "Cách drop dù xuống Sosnovka an toàn nhất?",
+      "label": "out_of_domain",
+      "top1_score": 0.292756,
+      "top1_id": "pubg_terms_of_service_vi::chunk-33",
+      "top1_source": "KRAFTON, Inc.",
+      "top3_scores": [
+        0.292756,
+        0.275472,
+        0.268214
+      ]
+    },
+    {
+      "id": "ood05",
+      "question": "PUBG Mobile và PUBG PC khác nhau thế nào?",
+      "label": "out_of_domain",
+      "top1_score": 0.521877,
+      "top1_id": "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-12",
+      "top1_source": "PUBG / KRAFTON",
+      "top3_scores": [
+        0.521877,
+        0.515698,
+        0.488225
+      ]
+    },
+    {
+      "id": "ood06",
+      "question": "Cấu hình PC bao nhiêu FPS để chơi PUBG mượt?",
+      "label": "out_of_domain",
+      "top1_score": 0.490941,
+      "top1_id": "justice_for_himass_tanvuu_vi::chunk-1",
+      "top1_source": "VnExpress",
+      "top3_scores": [
+        0.490941,
+        0.489492,
+        0.47946
+      ]
+    },
+    {
+      "id": "ood07",
+      "question": "Cách chỉnh độ nhạy chuột cho PUBG?",
+      "label": "out_of_domain",
+      "top1_score": 0.501437,
+      "top1_id": "pubg_rules_of_conduct_vi::chunk-0",
+      "top1_source": "KRAFTON, Inc.",
+      "top3_scores": [
+        0.501437,
+        0.446305,
+        0.444681
+      ]
+    },
+    {
+      "id": "ood08",
+      "question": "Đội tuyển nào mạnh nhất PUBG Việt Nam hiện tại?",
+      "label": "out_of_domain",
+      "top1_score": 0.527394,
+      "top1_id": "justice_for_himass_tanvuu_vi::chunk-1",
+      "top1_source": "VnExpress",
+      "top3_scores": [
+        0.527394,
+        0.51618,
+        0.51461
+      ]
+    },
+    {
+      "id": "ood09",
+      "question": "So sánh PUBG và Free Fire game nào hay hơn?",
+      "label": "out_of_domain",
+      "top1_score": 0.488409,
+      "top1_id": "pubg_terms_of_service_vi::chunk-0",
+      "top1_source": "KRAFTON, Inc.",
+      "top3_scores": [
+        0.488409,
+        0.47899,
+        0.478751
+      ]
+    },
+    {
+      "id": "ood10",
+      "question": "Patch notes PUBG update mới nhất có gì?",
+      "label": "out_of_domain",
+      "top1_score": 0.54276,
+      "top1_id": "pubg_rules_of_conduct_vi::chunk-0",
+      "top1_source": "KRAFTON, Inc.",
+      "top3_scores": [
+        0.54276,
+        0.507673,
+        0.498835
+      ]
+    },
+    {
+      "id": "ood11",
+      "question": "Ai vô địch PGC năm nay?",
+      "label": "out_of_domain",
+      "top1_score": 0.424723,
+      "top1_id": "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-13",
+      "top1_source": "PUBG / KRAFTON",
+      "top3_scores": [
+        0.424723,
+        0.398304,
+        0.397076
+      ]
+    },
+    {
+      "id": "ood12",
+      "question": "Valorant rank distribution hiện tại là gì?",
+      "label": "out_of_domain",
+      "top1_score": 0.328465,
+      "top1_id": "justice_for_himass_tanvuu_vi::chunk-1",
+      "top1_source": "VnExpress",
+      "top3_scores": [
+        0.328465,
+        0.301563,
+        0.300324
+      ]
+    },
+    {
+      "id": "ood13",
+      "question": "Thời tiết Hà Nội hôm nay thế nào?",
+      "label": "out_of_domain",
+      "top1_score": 0.250954,
+      "top1_id": "pubg_rules_of_conduct_vi::chunk-37",
+      "top1_source": "KRAFTON, Inc.",
+      "top3_scores": [
+        0.250954,
+        0.235273,
+        0.234333
+      ]
+    },
+    {
+      "id": "ood14",
+      "question": "Cách nấu phở bò ngon nhất?",
+      "label": "out_of_domain",
+      "top1_score": 0.306947,
+      "top1_id": "pubg_rules_of_conduct_vi::chunk-19",
+      "top1_source": "KRAFTON, Inc.",
+      "top3_scores": [
+        0.306947,
+        0.278939,
+        0.271411
+      ]
+    },
+    {
+      "id": "ood15",
+      "question": "Giá Bitcoin hiện tại bao nhiêu?",
+      "label": "out_of_domain",
+      "top1_score": 0.335333,
+      "top1_id": "pubg_rules_of_conduct_vi::chunk-52",
+      "top1_source": "KRAFTON, Inc.",
+      "top3_scores": [
+        0.335333,
+        0.325322,
+        0.313583
+      ]
+    },
+    {
+      "id": "ood16",
+      "question": "What time is it in Hanoi right now?",
+      "label": "out_of_domain",
+      "top1_score": 0.269864,
+      "top1_id": "pubg_terms_of_service_vi::chunk-34",
+      "top1_source": "KRAFTON, Inc.",
+      "top3_scores": [
+        0.269864,
+        0.253924,
+        0.25019
+      ]
+    }
+  ]
+}

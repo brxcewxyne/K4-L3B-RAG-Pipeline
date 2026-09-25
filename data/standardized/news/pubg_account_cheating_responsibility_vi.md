@@ -8,7 +8,7 @@ language: "en"
 doc_type: "news"
 source_type: "official_support"
 authority_level: "primary"
-source_file: "data/landing/web/pubg_account_cheating_responsibility_vi.json"
+source_file: "data/landing/news/pubg_account_cheating_responsibility_vi.json"
 date_crawled: "2026-09-25"
 topic:
   - "account_responsibility"

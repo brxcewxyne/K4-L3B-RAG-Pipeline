@@ -29,6 +29,7 @@ from src.ui_components import (
     assistant_message_html,
     bm25_panel_html,
     dense_panel_html,
+    fallback_panel_html,
     flow_banner_html,
     flow_diagram_html,
     flow_query_html,
@@ -368,6 +369,19 @@ def _render_flow_tab() -> None:
     )
     st.markdown(
         rrf_panel_html(trace.get("rrf", {}).get("results", [])),
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        flow_section_html(
+            "B2 · PAGEINDEX FALLBACK",
+            "Chỉ chạy khi hybrid confidence yếu (PageIndex là downstream, "
+            "không phải nhánh song song thứ ba).",
+        ),
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        fallback_panel_html(trace.get("fallback"),
+                            trace.get("pageindex", {}).get("results", [])),
         unsafe_allow_html=True,
     )
     st.markdown(

@@ -1,0 +1,3823 @@
+{
+  "meta": {
+    "evaluated_at": "2026-09-25T17:23:50+00:00",
+    "top_k": 5,
+    "rrf_k": 60,
+    "config_a": "dense-only (task5.semantic_search)",
+    "config_b": "hybrid dense+BM25 with RRF (task5+task6->task7)",
+    "generator": "task10.format_context + task10.call_llm (shared)",
+    "evaluator_model": "gpt-4.1-mini",
+    "evaluator_params": {
+      "temperature": 0.0,
+      "response_format": "json_object",
+      "max_completion_tokens": 800
+    },
+    "metrics": "LLM-judge claim/rank verdicts (context_recall, context_precision, faithfulness, answer_relevance); lexical overlap kept only in per-row diagnostics"
+  },
+  "summary": {
+    "A": {
+      "n": 16,
+      "avg": {
+        "faithfulness": 0.9792,
+        "answer_relevance": 0.675,
+        "context_recall": 0.9531,
+        "context_precision": 0.4375
+      }
+    },
+    "B": {
+      "n": 16,
+      "avg": {
+        "faithfulness": 1.0,
+        "answer_relevance": 0.9,
+        "context_recall": 0.9688,
+        "context_precision": 0.55
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "q01",
+      "config": "A",
+      "question": "Quy tắc ứng xử PUBG cấm những hành vi nào liên quan đến phần mềm hoặc thiết bị gian lận?",
+      "answer": "Không tìm thấy đủ thông tin đáng tin cậy trong bộ tài liệu hiện có để trả lời câu hỏi này.",
+      "refused": true,
+      "chunk_ids": [
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-11",
+        "pubg_rules_of_conduct_vi::chunk-0",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-10",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-5",
+        "pubg_rules_of_conduct_vi::chunk-17"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.0,
+      "context_recall": 0.875,
+      "context_precision": 0.0,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Quy tắc ứng xử cấm sử dụng chương trình hoặc thiết bị phần cứng trái phép để tạo lợi thế không công bằng",
+              "supported": true,
+              "evidence": "KHÔNG SỬ DỤNG CÁC CHƯƠNG TRÌNH HOẶC THIẾT BỊ PHẦN CỨNG TRÁI PHÉP"
+            },
+            {
+              "claim": "Các chương trình hoặc thiết bị trái phép bao gồm hack, gian lận, bot, macro, thiết bị DMA",
+              "supported": false,
+              "evidence": "none"
+            },
+            {
+              "claim": "Vi phạm quy tắc sử dụng chương trình hoặc thiết bị trái phép có thể bị cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "bạn có thể bị phạt nặng như cấm chơi vĩnh viễn"
+            },
+            {
+              "claim": "Vi phạm có thể bị xử lý pháp lý nếu phát triển các chương trình trái phép",
+              "supported": true,
+              "evidence": "Phát triển... chương trình trái phép có thể bị hành động pháp lý"
+            },
+            {
+              "claim": "Vi phạm có thể bị xử lý pháp lý nếu quảng cáo các chương trình trái phép",
+              "supported": true,
+              "evidence": "quảng cáo... chương trình trái phép có thể bị hành động pháp lý"
+            },
+            {
+              "claim": "Vi phạm có thể bị xử lý pháp lý nếu kinh doanh các chương trình trái phép",
+              "supported": true,
+              "evidence": "kinh doanh... chương trình trái phép có thể bị hành động pháp lý"
+            },
+            {
+              "claim": "Vi phạm có thể bị xử lý pháp lý nếu phân phối các chương trình trái phép",
+              "supported": true,
+              "evidence": "phân phối... chương trình trái phép có thể bị hành động pháp lý"
+            },
+            {
+              "claim": "Quy tắc ứng xử được ban hành bởi KRAFTON, Inc.",
+              "supported": true,
+              "evidence": "Nguồn chính thức: https://www.pubg.com/vi/clause/rules_of_conduct/label_steam/latest Nhà xuất bản: KRAFTON, Inc."
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": false,
+              "reason": "Mentions general violations but no specific mention of software or cheating devices"
+            },
+            {
+              "chunk_index": 2,
+              "relevant": false,
+              "reason": "Only introduction to rules, no details on cheating or software/device bans"
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Discusses disciplinary actions but no specific mention of cheating software or devices"
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "Mentions violations of conduct but no details on cheating software or devices"
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Focuses on inappropriate names, unrelated to cheating software or devices"
+            }
+          ]
+        },
+        "faithfulness": {
+          "rule": "safe refusal makes no factual claims"
+        },
+        "answer_relevance": {
+          "rule": "refusal does not address the question"
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 1.0,
+        "answer_relevance": 0.0,
+        "context_recall": 0.4103,
+        "context_precision": 0.8
+      }
+    },
+    {
+      "id": "q01",
+      "config": "B",
+      "question": "Quy tắc ứng xử PUBG cấm những hành vi nào liên quan đến phần mềm hoặc thiết bị gian lận?",
+      "answer": "Quy tắc ứng xử PUBG cấm sử dụng các thiết bị hoặc phần mềm trái phép như DMA hoặc các thiết bị phần cứng khác. Người vi phạm có thể bị phạt nặng, bao gồm cấm chơi trò chơi vĩnh viễn và hạn chế sử dụng dịch vụ trên các thiết bị phần cứng của mình. KRAFTON cũng có thể thực hiện các hành động pháp lý đối với những người phát triển, quảng cáo, kinh doanh hoặc phân phối các chương trình hoặc phần cứng trái phép [4].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_rules_of_conduct_vi::chunk-0",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-11",
+        "pubg_terms_of_service_vi::chunk-1",
+        "pubg_rules_of_conduct_vi::chunk-14",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-10"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 0.2,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Quy tắc ứng xử cấm sử dụng chương trình hoặc thiết bị phần cứng trái phép để tạo lợi thế không công bằng",
+              "supported": true,
+              "evidence": "KHÔNG SỬ DỤNG CÁC CHƯƠNG TRÌNH HOẶC THIẾT BỊ PHẦN CỨNG TRÁI PHÉP"
+            },
+            {
+              "claim": "Các chương trình hoặc thiết bị trái phép bao gồm hack, gian lận, bot, macro, thiết bị DMA",
+              "supported": true,
+              "evidence": "\"DMA\" hoặc các thiết bị phần cứng khác (gọi chung là “Thiết bị hoặc Phần mềm trái phép\")"
+            },
+            {
+              "claim": "Vi phạm quy tắc có thể bị cấm chơi vĩnh viễn",
+              "supported": true,
+              "evidence": "bạn có thể bị phạt nặng như cấm chơi vĩnh viễn"
+            },
+            {
+              "claim": "Phát triển các chương trình trái phép có thể bị xử lý pháp lý",
+              "supported": true,
+              "evidence": "Phát triển, quảng cáo, kinh doanh hoặc phân phối chương trình trái phép có thể bị hành động pháp lý"
+            },
+            {
+              "claim": "Quảng cáo các chương trình trái phép có thể bị xử lý pháp lý",
+              "supported": true,
+              "evidence": "Phát triển, quảng cáo, kinh doanh hoặc phân phối chương trình trái phép có thể bị hành động pháp lý"
+            },
+            {
+              "claim": "Kinh doanh các chương trình trái phép có thể bị xử lý pháp lý",
+              "supported": true,
+              "evidence": "Phát triển, quảng cáo, kinh doanh hoặc phân phối chương trình trái phép có thể bị hành động pháp lý"
+            },
+            {
+              "claim": "Phân phối các chương trình trái phép có thể bị xử lý pháp lý",
+              "supported": true,
+              "evidence": "Phát triển, quảng cáo, kinh doanh hoặc phân phối chương trình trái phép có thể bị hành động pháp lý"
+            },
+            {
+              "claim": "Vi phạm quy tắc có thể bị hạn chế sử dụng dịch vụ trên thiết bị phần cứng của bạn",
+              "supported": true,
+              "evidence": "bạn có thể bị phạt nặng, chẳng hạn như cấm chơi trò chơi vĩnh viễn và hạn chế sử dụng Dịch vụ trên với các thiết bị phần cứng của bạn"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": false,
+              "reason": "Only introduction to PUBG rules, no mention of cheating software or devices."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": false,
+              "reason": "Mentions game experience disruption and harassment but no specific mention of cheating software or devices."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Defines game software and related materials but does not mention cheating or banned devices."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": true,
+              "reason": "Mentions 'Thiết bị hoặc Phần mềm trái phép' (unauthorized devices or software) and penalties including permanent bans and legal actions."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Describes disciplinary actions for specific players but does not detail cheating software or device rules."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "PUBG rules prohibit using unauthorized devices or software like DMA or other hardware devices.",
+              "supported": true,
+              "evidence": "\"('DMA') hoặc các thiết bị phần cứng khác (gọi chung là 'Thiết bị hoặc Phần mềm trái phép')\""
+            },
+            {
+              "claim": "Violators can be severely punished, including permanent game bans and restrictions on using services on their hardware devices.",
+              "supported": true,
+              "evidence": "\"bạn có thể bị phạt nặng, chẳng hạn như cấm chơi trò chơi vĩnh viễn và hạn chế sử dụng Dịch vụ trên với các thiết bị phần cứng của bạn.\""
+            },
+            {
+              "claim": "KRAFTON can take legal actions against those who develop, advertise, trade, or distribute unauthorized programs or hardware.",
+              "supported": true,
+              "evidence": "\"KRAFTON có thể sẽ thực hiện các hành động mang tính pháp lý đối với bạn, có thể yêu cầu cơ quan tư pháp hỗ\""
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "The answer directly and completely lists the prohibited behaviors related to cheating software and devices as asked in the question."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.9524,
+        "answer_relevance": 0.7,
+        "context_recall": 0.9744,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q02",
+      "config": "A",
+      "question": "Hành vi giết đồng đội (teamkill) trong PUBG bị xử phạt như thế nào?",
+      "answer": "Không tìm thấy đủ thông tin đáng tin cậy trong bộ tài liệu hiện có để trả lời câu hỏi này.",
+      "refused": true,
+      "chunk_ids": [
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-5",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-11",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-2",
+        "justice_for_himass_tanvuu_vi::chunk-7",
+        "pubg_rules_of_conduct_vi::chunk-17"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.0,
+      "context_recall": 0.625,
+      "context_precision": 0.2,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Giết đồng đội cố ý bị cấm",
+              "supported": true,
+              "evidence": "Cấm các hành động giết đồng đội vì gây cản trở lối chơi bình thường của cả đội."
+            },
+            {
+              "claim": "Giết đồng đội lặp lại nhiều lần bị cấm",
+              "supported": false,
+              "evidence": "none"
+            },
+            {
+              "claim": "Giết đồng đội có thể bị cấm vĩnh viễn (Permanent Ban)",
+              "supported": true,
+              "evidence": "Bảng tiêu chí hình phạt: Giết đồng đội — Cấm vĩnh viễn."
+            },
+            {
+              "claim": "Bảng tiêu chí hình phạt quy định hình phạt cho giết đồng đội",
+              "supported": true,
+              "evidence": "Bảng tiêu chí hình phạt: Giết đồng đội — Cấm vĩnh viễn."
+            },
+            {
+              "claim": "Hình phạt giết đồng đội là cấm vĩnh viễn theo bảng tiêu chí",
+              "supported": true,
+              "evidence": "Bảng tiêu chí hình phạt: Giết đồng đội — Cấm vĩnh viễn."
+            },
+            {
+              "claim": "Giết đồng đội gây cản trở lối chơi bình thường của cả đội",
+              "supported": true,
+              "evidence": "Cấm các hành động giết đồng đội vì gây cản trở lối chơi bình thường của cả đội."
+            },
+            {
+              "claim": "Giết đồng đội là hành vi vi phạm chính sách vận hành PUBG",
+              "supported": false,
+              "evidence": "none"
+            },
+            {
+              "claim": "Giết đồng đội bị xử lý theo bảng tiêu chí hình phạt rõ ràng",
+              "supported": false,
+              "evidence": "none"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": false,
+              "reason": "Mentions violation of PUBG policies but does not specify punishment for teamkill."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": false,
+              "reason": "Lists policy violations but does not detail penalties for teamkill."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Confirms violation investigation but no punishment details for teamkill."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": true,
+              "reason": "Mentions that players ended their PUBG PC careers, implying punishment for violations including teamkill."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Discusses inappropriate usernames, unrelated to teamkill punishment."
+            }
+          ]
+        },
+        "faithfulness": {
+          "rule": "safe refusal makes no factual claims"
+        },
+        "answer_relevance": {
+          "rule": "refusal does not address the question"
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 1.0,
+        "answer_relevance": 0.0714,
+        "context_recall": 0.52,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q02",
+      "config": "B",
+      "question": "Hành vi giết đồng đội (teamkill) trong PUBG bị xử phạt như thế nào?",
+      "answer": "Hành vi giết đồng đội trong PUBG bị cấm vì gây cản trở lối chơi bình thường của cả đội và sẽ bị áp dụng hình phạt nếu hành động giết đồng đội được xác định là cố ý và lặp lại nhiều lần [1]. Ngoài ra, việc giết đồng đội khi không có sự chấp thuận của người chơi thuộc đội đối tượng hoặc gây cản trở lối chơi bình thường của đội cũng bị nghiêm cấm [5].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_rules_of_conduct_vi::chunk-24",
+        "justice_for_himass_tanvuu_vi::chunk-7",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-5",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-11",
+        "pubg_terms_of_service_vi::chunk-31"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.9,
+      "context_recall": 1.0,
+      "context_precision": 0.4,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Giết đồng đội cố ý và lặp lại nhiều lần bị cấm",
+              "supported": true,
+              "evidence": "Cấm các hành động giết đồng đội vì gây cản trở lối chơi bình thường của cả đội và hình phạt sẽ được áp dụng nếu hành động giết đồng đội được xác định là cố ý và lặp lại nhiều lần."
+            },
+            {
+              "claim": "Giết đồng đội có thể bị cấm vĩnh viễn (Permanent Ban) theo bảng tiêu chí hình phạt",
+              "supported": true,
+              "evidence": "Bảng tiêu chí hình phạt: Giết đồng đội — Cấm vĩnh viễn."
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Directly mentions teamkill is prohibited and punished if intentional and repeated."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": false,
+              "reason": "Discusses general punishment and transparency but not specific to teamkill."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Mentions violation of policies but no specific mention of teamkill punishment."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "Lists general policy violations but does not specify teamkill punishment."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": true,
+              "reason": "Specifically mentions killing teammates without consent and causing disruption as prohibited behavior."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "Hành vi giết đồng đội trong PUBG bị cấm vì gây cản trở lối chơi bình thường của cả đội",
+              "supported": true,
+              "evidence": "Cấm các hành động giết đồng đội vì gây cản trở lối chơi bình thường của cả đội"
+            },
+            {
+              "claim": "Hình phạt sẽ được áp dụng nếu hành động giết đồng đội được xác định là cố ý và lặp lại nhiều lần",
+              "supported": true,
+              "evidence": "hình phạt sẽ được áp dụng nếu hành động giết đồng đội được xác định là cố ý và lặp lại nhiều lần"
+            },
+            {
+              "claim": "Việc giết đồng đội khi không có sự chấp thuận của người chơi thuộc đội đối tượng bị nghiêm cấm",
+              "supported": true,
+              "evidence": "giết đồng đội khi không có sự chấp thuận của người chơi thuộc đội đối tượng"
+            },
+            {
+              "claim": "Việc giết đồng đội gây cản trở lối chơi bình thường của đội cũng bị nghiêm cấm",
+              "supported": true,
+              "evidence": "gây cản trở lối chơi bình thường của đội"
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 0.9,
+          "reason": "The answer explains that teamkill in PUBG is prohibited and punished if intentional and repeated, addressing the question about penalties, but does not specify exact punishments or penalties."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.9455,
+        "answer_relevance": 0.6429,
+        "context_recall": 0.84,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q03",
+      "config": "A",
+      "question": "Khai thác lỗi (bug) trong trò chơi PUBG bị xử lý ra sao?",
+      "answer": "Khai thác lỗi kỹ thuật và các tình huống bất thường trong trò chơi PUBG sẽ bị xử lý nghiêm trọng. Người dùng khai thác sai sót và lỗi kỹ thuật sẽ chịu các hình phạt nghiêm khắc, bao gồm việc xóa tiền tệ trong trò chơi và các vật phẩm thu được từ lợi thế không công bằng này. KRAFTON bảo lưu quyền thực hiện các biện pháp đối với những người sử dụng lợi thế không công bằng thông qua các thủ tục chính thức [5].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_rules_of_conduct_vi::chunk-0",
+        "pubg_rules_of_conduct_vi::chunk-11",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-0",
+        "pubg_rules_of_conduct_vi::chunk-12",
+        "pubg_rules_of_conduct_vi::chunk-16"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 0.4,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Khai thác lỗi và tình huống bất thường nghiêm trọng có thể bị cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Bảng tiêu chí: Khai thác lỗi nghiêm trọng — Cấm vĩnh viễn."
+            },
+            {
+              "claim": "Tiền tệ trong trò chơi thu được từ lợi thế khai thác lỗi sẽ bị xóa",
+              "supported": true,
+              "evidence": "tiền tệ trong trò chơi và các vật phẩm thu được từ những lợi thế này sẽ bị xóa."
+            },
+            {
+              "claim": "Vật phẩm thu được từ lợi thế khai thác lỗi sẽ bị xóa",
+              "supported": true,
+              "evidence": "tiền tệ trong trò chơi và các vật phẩm thu được từ những lợi thế này sẽ bị xóa."
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": false,
+              "reason": "Only introduces rules of conduct without specific mention of bug exploitation handling."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Mentions that exploiting bugs and sharing info can lead to restrictions as intentional violations."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Discusses apology and fairness in tournament operation, not bug exploitation handling."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "Describes customer support channels and response times, no mention of bug exploitation."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": true,
+              "reason": "Specifically states that exploiting bugs leads to serious penalties including removal of in-game currency and items."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "Khai thác lỗi kỹ thuật và các tình huống bất thường trong trò chơi PUBG sẽ bị xử lý nghiêm trọng",
+              "supported": true,
+              "evidence": "Người dùng khai thác sai sót và lỗi kỹ thuật xuất hiện trong khi chơi trò chơi sẽ phải chịu các hình phạt nghiêm trọng"
+            },
+            {
+              "claim": "Người dùng khai thác sai sót và lỗi kỹ thuật sẽ chịu các hình phạt nghiêm khắc, bao gồm việc xóa tiền tệ trong trò chơi và các vật phẩm thu được từ lợi thế không công bằng",
+              "supported": true,
+              "evidence": "tiền tệ trong trò chơi và các vật phẩm thu được từ những lợi thế này sẽ bị xóa"
+            },
+            {
+              "claim": "KRAFTON bảo lưu quyền thực hiện các biện pháp đối với những người sử dụng lợi thế không công bằng thông qua các thủ tục chính thức",
+              "supported": true,
+              "evidence": "chúng tôi bảo lưu quyền thực hiện các biện pháp đối với những người sử dụng các lợi thế không công bằng thông qua các thủ tục chính thức"
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "The answer directly and completely explains how exploiting bugs in PUBG is handled, including penalties and enforcement by KRAFTON."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.9545,
+        "answer_relevance": 0.7692,
+        "context_recall": 0.878,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q03",
+      "config": "B",
+      "question": "Khai thác lỗi (bug) trong trò chơi PUBG bị xử lý ra sao?",
+      "answer": "Khai thác lỗi kỹ thuật và các tình huống bất thường trong trò chơi PUBG sẽ bị xử phạt nghiêm trọng. Các lợi thế không công bằng thu được từ việc khai thác này, bao gồm tiền tệ và vật phẩm trong trò chơi, sẽ bị xóa bỏ. Người dùng có hành vi này có thể bị hạn chế sử dụng dịch vụ trò chơi vì đây được xem là hành vi sai phạm có chủ ý theo Bộ quy tắc ứng xử của PUBG [1], [5].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_rules_of_conduct_vi::chunk-16",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-0",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-10",
+        "pubg_rules_of_conduct_vi::chunk-0",
+        "pubg_rules_of_conduct_vi::chunk-11"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 0.4,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Khai thác lỗi và tình huống bất thường nghiêm trọng có thể bị cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Bảng tiêu chí: Khai thác lỗi nghiêm trọng — Cấm vĩnh viễn."
+            },
+            {
+              "claim": "Tiền tệ trong trò chơi thu được từ lợi thế khai thác lỗi sẽ bị xóa",
+              "supported": true,
+              "evidence": "tiền tệ trong trò chơi ... sẽ bị xóa."
+            },
+            {
+              "claim": "Vật phẩm thu được từ lợi thế khai thác lỗi sẽ bị xóa",
+              "supported": true,
+              "evidence": "vật phẩm thu được từ những lợi thế này sẽ bị xóa."
+            },
+            {
+              "claim": "Người dùng khai thác lỗi sẽ chịu hình phạt nghiêm trọng",
+              "supported": true,
+              "evidence": "Người dùng khai thác sai sót và lỗi kỹ thuật ... sẽ phải chịu các hình phạt nghiêm trọng"
+            },
+            {
+              "claim": "Khai thác lỗi bao gồm lỗi kỹ thuật và các tình huống bất thường",
+              "supported": true,
+              "evidence": "KHÔNG KHAI THÁC LỖHỔNG TRONG TRÒ CHƠI (LỖI KỸTHUẬT VÀ CÁC TÌNH HUỐNG BẤT THƯỜNG)"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Nêu rõ hình phạt nghiêm trọng đối với người khai thác lỗi trong trò chơi PUBG."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": false,
+              "reason": "Chỉ là lời xin lỗi chung, không đề cập đến xử lý lỗi."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Xử lý vi phạm hành vi tuyển thủ, không liên quan đến khai thác lỗi trong trò chơi."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "Giới thiệu quy tắc ứng xử chung, không cụ thể về xử lý lỗi."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": true,
+              "reason": "Nêu việc hạn chế sử dụng dịch vụ nếu không thông báo lỗ hổng, liên quan đến xử lý khai thác lỗi."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "Khai thác lỗi kỹ thuật và các tình huống bất thường trong trò chơi PUBG sẽ bị xử phạt nghiêm trọng",
+              "supported": true,
+              "evidence": "Người dùng khai thác sai sót và lỗi kỹ thuật xuất hiện trong khi chơi trò chơi sẽ phải chịu các hình phạt nghiêm trọng"
+            },
+            {
+              "claim": "Các lợi thế không công bằng thu được từ việc khai thác này, bao gồm tiền tệ và vật phẩm trong trò chơi, sẽ bị xóa bỏ",
+              "supported": true,
+              "evidence": "tiền tệ trong trò chơi và các vật phẩm thu được từ những lợi thế này sẽ bị xóa"
+            },
+            {
+              "claim": "Người dùng có hành vi này có thể bị hạn chế sử dụng dịch vụ trò chơi vì đây được xem là hành vi sai phạm có chủ ý theo Bộ quy tắc ứng xử của PUBG",
+              "supported": true,
+              "evidence": "bạn có thể bị hạn chế đối với việc sử dụng các dịch vụ trò chơi vì đây được xem là hành vi sai phạm có chủ ý, theo Bộ quy tắc ứng xử này"
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "The answer directly and completely explains the consequences of exploiting bugs in PUBG, including penalties and removal of unfair advantages."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.9403,
+        "answer_relevance": 0.6923,
+        "context_recall": 0.878,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q04",
+      "config": "A",
+      "question": "Người chơi AFK trong trận đấu PUBG bị phạt thế nào?",
+      "answer": "Người chơi thực hiện AFK trong trận đấu PUBG sẽ bị áp dụng hình phạt, có thể bị cấm và/hoặc bị hạn chế quyền truy cập vào thông tin và tài khoản của chính mình. AFK được xem là hành vi gây bất lợi cho đồng đội và phá hoại trải nghiệm trò chơi của người dùng [1].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_rules_of_conduct_vi::chunk-29",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-5",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-11",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-2",
+        "justice_for_himass_tanvuu_vi::chunk-7"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 0.2,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "AFK trong trận đấu có thể bị phạt",
+              "supported": true,
+              "evidence": "Hình phạt sẽ được áp dụng đối với những người chơi thực hiện AFK trong trận đấu."
+            },
+            {
+              "claim": "Mức phạt tối đa cho AFK là cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Bảng tiêu chí hình phạt: AFK — Cấm vĩnh viễn."
+            },
+            {
+              "claim": "AFK liên tục để kiếm điểm bị xóa toàn bộ tiến trình và vật phẩm tài khoản",
+              "supported": true,
+              "evidence": "Người chơi AFK liên tục để kiếm điểm sẽ bị xóa toàn bộ tiến trình và vật phẩm của tài khoản."
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Describes penalties for AFK players including bans and restrictions."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": false,
+              "reason": "Discusses violations by specific players, not general AFK penalties."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Mentions policy violations but not specific AFK punishments."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "Details investigation results, not AFK penalties."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Talks about general punishment principles, not specific AFK penalties."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "Người chơi thực hiện AFK trong trận đấu PUBG sẽ bị áp dụng hình phạt",
+              "supported": true,
+              "evidence": "Hình phạt sẽ được áp dụng đối với những người chơi thực hiện AFK trong trận đấu."
+            },
+            {
+              "claim": "Người chơi thực hiện AFK có thể bị cấm và/hoặc bị hạn chế quyền truy cập vào thông tin và tài khoản của chính mình",
+              "supported": true,
+              "evidence": "người dùng có thể bị cấm và/hoặc bị hạn chế quyền truy cập vào thông tin và tài khoản của chính mình."
+            },
+            {
+              "claim": "AFK được xem là hành vi gây bất lợi cho đồng đội",
+              "supported": true,
+              "evidence": "AFK có thể khiến đồng đội của bạn gặp bất lợi"
+            },
+            {
+              "claim": "AFK phá hoại trải nghiệm trò chơi của người dùng",
+              "supported": true,
+              "evidence": "ngầm phá hoại trải nghiệm trò chơi của người dùng"
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "The answer directly explains the penalties for AFK players in PUBG, including bans and access restrictions, fully addressing the question."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.9412,
+        "answer_relevance": 0.8182,
+        "context_recall": 0.6111,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q04",
+      "config": "B",
+      "question": "Người chơi AFK trong trận đấu PUBG bị phạt thế nào?",
+      "answer": "Người chơi AFK trong trận đấu PUBG sẽ bị cấm vĩnh viễn. AFK có thể khiến đồng đội gặp bất lợi hoặc phá hoại trải nghiệm trò chơi của người dùng, do đó hình phạt được áp dụng nghiêm khắc [1], [2].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_rules_of_conduct_vi::chunk-29",
+        "pubg_rules_of_conduct_vi::chunk-39",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-5",
+        "pubg_rules_of_conduct_vi::chunk-45",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-11"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.9,
+      "context_recall": 1.0,
+      "context_precision": 0.4,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "AFK trong trận đấu có thể bị phạt",
+              "supported": true,
+              "evidence": "Hình phạt sẽ được áp dụng đối với những người chơi thực hiện AFK trong trận đấu."
+            },
+            {
+              "claim": "Mức phạt tối đa cho AFK là cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "AFK — Cấm vĩnh viễn."
+            },
+            {
+              "claim": "AFK có thể gây bất lợi cho đồng đội hoặc phá hoại trải nghiệm trò chơi",
+              "supported": true,
+              "evidence": "AFK có thể khiến đồng đội của bạn gặp bất lợi hoặc ngầm phá hoại trải nghiệm trò chơi của người dùng."
+            },
+            {
+              "claim": "Người chơi AFK liên tục để kiếm điểm sẽ bị xóa toàn bộ tiến trình và vật phẩm tài khoản",
+              "supported": true,
+              "evidence": "Người chơi AFK liên tục để kiếm điểm sẽ bị xóa toàn bộ tiến trình và vật phẩm của tài khoản."
+            },
+            {
+              "claim": "Hình phạt AFK áp dụng cho người chơi rời bàn phím hoặc không hoạt động",
+              "supported": true,
+              "evidence": "KHÔNG AFK (RỜI KHỎI BÀN PHÍM HOẶC KHÔNG HOẠT ĐỘNG)"
+            },
+            {
+              "claim": "Người dùng có thể bị cấm hoặc hạn chế quyền truy cập tài khoản khi vi phạm",
+              "supported": true,
+              "evidence": "người dùng có thể bị cấm và/hoặc bị hạn chế quyền truy cập vào thông tin và tài khoản của chính mình."
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Describes penalties for AFK players in PUBG matches."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Lists AFK as punishable by permanent ban."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Discusses policy violations by professional players, not AFK penalties."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "Explains optional game modes and rules, unrelated to AFK penalties."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Mentions policy violations and abuse but does not specify AFK penalties."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "Người chơi AFK trong trận đấu PUBG sẽ bị cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "AFK\nCấm vĩnh viễn"
+            },
+            {
+              "claim": "AFK có thể khiến đồng đội gặp bất lợi",
+              "supported": true,
+              "evidence": "AFK có thể khiến đồng đội của bạn gặp bất lợi"
+            },
+            {
+              "claim": "AFK có thể phá hoại trải nghiệm trò chơi của người dùng",
+              "supported": true,
+              "evidence": "ngầm phá hoại trải nghiệm trò chơi của người dùng"
+            },
+            {
+              "claim": "Hình phạt AFK được áp dụng nghiêm khắc",
+              "supported": true,
+              "evidence": "Hình phạt sẽ được áp dụng đối với những người chơi thực hiện AFK"
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 0.9,
+          "reason": "Answer explains that AFK players in PUBG are permanently banned and why, directly addressing the question, but lacks details on intermediate penalties or official policy specifics."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.9231,
+        "answer_relevance": 0.8182,
+        "context_recall": 0.6944,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q05",
+      "config": "A",
+      "question": "G-COIN trong PUBG là gì và chính sách hoàn tiền cho G-COIN ra sao?",
+      "answer": "Không tìm thấy đủ thông tin đáng tin cậy trong bộ tài liệu hiện có để trả lời câu hỏi này.",
+      "refused": true,
+      "chunk_ids": [
+        "pubg_rules_of_conduct_vi::chunk-54",
+        "pubg_rules_of_conduct_vi::chunk-53",
+        "pubg_rules_of_conduct_vi::chunk-52",
+        "pubg_rules_of_conduct_vi::chunk-57",
+        "pubg_rules_of_conduct_vi::chunk-55"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.0,
+      "context_recall": 1.0,
+      "context_precision": 0.8,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "G-COIN là tiền tệ trong trò chơi dùng để mua vật phẩm",
+              "supported": true,
+              "evidence": "G-COIN Cash (sau đây gọi là “G-COIN”) là một loại tiền tệ trong trò chơi, được sử dụng để mua các vật phẩm do công ty cung cấp."
+            },
+            {
+              "claim": "G-COIN không có giá trị tiền tệ thực",
+              "supported": true,
+              "evidence": "G-COIN không có giá trị tiền tệ và bạn không sở hữu G-COIN."
+            },
+            {
+              "claim": "G-COIN không thể chuyển cho người khác",
+              "supported": true,
+              "evidence": "Bạn không thể chuyển G-COIN cho người dùng khác"
+            },
+            {
+              "claim": "G-COIN không thể đổi ra tiền thật",
+              "supported": true,
+              "evidence": "Bạn không thể đổi G-COIN để lấy bất kỳ tiền tệ thực tế hoặc tiền giấy nào."
+            },
+            {
+              "claim": "Giao dịch mua bằng G-COIN trả phí có thể hủy trong 14 ngày nếu chưa sử dụng sản phẩm",
+              "supported": true,
+              "evidence": "Người dùng có thể hủy giao dịch mua của mình theo Đoạn 7 của Điều này. ... Chính sách hoàn tiền trong Điều khoản dịch vụ sẽ được áp dụng khi hủy giao dịch được thực hiện bằng G-COIN trả phí."
+            },
+            {
+              "claim": "Không thể hủy giao dịch mua bằng G-COIN thưởng",
+              "supported": true,
+              "evidence": "Không thể hủy các giao dịch được thực hiện bằng G-COIN thưởng."
+            },
+            {
+              "claim": "Giao dịch mua bằng G-COIN trả phí không thể hủy nếu bị vi phạm hoặc sự kiện thưởng",
+              "supported": true,
+              "evidence": "Nếu người dùng giả mạo, làm sai lệch, đánh cắp, lấy hoặc sử dụng G-COIN bất hợp pháp, người dùng đó sẽ bị phạt."
+            },
+            {
+              "claim": "G-COIN trả phí có hiệu lực trong 5 năm tính từ ngày mua",
+              "supported": true,
+              "evidence": "“G-COIN trả phí” có hiệu lực trong 5 năm tính từ ngày mua."
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Explains what G-COIN is and how it is used in PUBG."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Defines types of G-COIN and mentions refund policy for purchased G-COIN."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": true,
+              "reason": "Describes G-COIN as in-game currency and its usage limitations."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "Contains partial unrelated content and no clear info on G-COIN or refund policy."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": true,
+              "reason": "Details validity period of G-COIN and refund policy for G-COIN transactions."
+            }
+          ]
+        },
+        "faithfulness": {
+          "rule": "safe refusal makes no factual claims"
+        },
+        "answer_relevance": {
+          "rule": "refusal does not address the question"
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 1.0,
+        "answer_relevance": 0.0714,
+        "context_recall": 0.9268,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q05",
+      "config": "B",
+      "question": "G-COIN trong PUBG là gì và chính sách hoàn tiền cho G-COIN ra sao?",
+      "answer": "Không tìm thấy đủ thông tin đáng tin cậy trong bộ tài liệu hiện có để trả lời câu hỏi này.",
+      "refused": true,
+      "chunk_ids": [
+        "pubg_rules_of_conduct_vi::chunk-52",
+        "pubg_rules_of_conduct_vi::chunk-53",
+        "pubg_rules_of_conduct_vi::chunk-54",
+        "pubg_rules_of_conduct_vi::chunk-55",
+        "pubg_rules_of_conduct_vi::chunk-57"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.0,
+      "context_recall": 0.875,
+      "context_precision": 0.8,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "G-COIN là tiền tệ trong trò chơi dùng để mua vật phẩm",
+              "supported": true,
+              "evidence": "G-COIN Cash ... là một loại tiền tệ trong trò chơi, được sử dụng để mua các vật phẩm do công ty cung cấp."
+            },
+            {
+              "claim": "G-COIN không có giá trị tiền tệ thực",
+              "supported": true,
+              "evidence": "G-COIN không có giá trị tiền tệ và bạn không sở hữu G-COIN."
+            },
+            {
+              "claim": "G-COIN không thể chuyển cho người khác",
+              "supported": true,
+              "evidence": "Bạn không thể chuyển G-COIN cho người dùng khác"
+            },
+            {
+              "claim": "G-COIN không thể đổi ra tiền thật",
+              "supported": true,
+              "evidence": "Bạn không thể đổi G-COIN để lấy bất kỳ tiền tệ thực tế hoặc tiền giấy nào."
+            },
+            {
+              "claim": "Giao dịch mua bằng G-COIN trả phí có thể hủy trong 14 ngày nếu chưa sử dụng sản phẩm",
+              "supported": true,
+              "evidence": "Người dùng có thể hủy giao dịch mua của mình theo Đoạn 7 của Điều này ... Chính sách hoàn tiền trong Điều khoản dịch vụ sẽ được áp dụng khi hủy giao dịch được thực hiện bằng G-COIN trả phí."
+            },
+            {
+              "claim": "Không thể hủy giao dịch mua bằng G-COIN thưởng",
+              "supported": true,
+              "evidence": "Không thể hủy các giao dịch được thực hiện bằng G-COIN thưởng."
+            },
+            {
+              "claim": "Giao dịch mua bằng G-COIN trả phí không thể hủy nếu đã sử dụng sản phẩm",
+              "supported": false,
+              "evidence": "none"
+            },
+            {
+              "claim": "Giao dịch mua bằng G-COIN trả phí không thể hủy trong trường hợp bị cấm do vi phạm hoặc sự kiện thưởng",
+              "supported": true,
+              "evidence": "Nếu Điều khoản và Điều kiện của công ty ... nêu rõ rằng giao dịch đó là khoản thanh toán không thể hoàn lại. Nếu G-COIN được trao làm phần thưởng cho việc tham gia một sự kiện ... Không thể hủy các giao dịch được thực hiện bằng G-COIN thưởng."
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Defines G-COIN and its usage in PUBG."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Explains types of G-COIN and refund eligibility."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": true,
+              "reason": "Details how to purchase and use G-COIN and validity period."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": true,
+              "reason": "Describes refund policy for G-COIN and validity of reward G-COIN."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Mentions conditions and penalties but does not directly explain G-COIN or refund policy."
+            }
+          ]
+        },
+        "faithfulness": {
+          "rule": "safe refusal makes no factual claims"
+        },
+        "answer_relevance": {
+          "rule": "refusal does not address the question"
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 1.0,
+        "answer_relevance": 0.0714,
+        "context_recall": 0.9268,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q06",
+      "config": "A",
+      "question": "Điều khoản Dịch vụ PUBG quy định gì về giấy phép sử dụng trò chơi?",
+      "answer": "Không tìm thấy đủ thông tin đáng tin cậy trong bộ tài liệu hiện có để trả lời câu hỏi này.",
+      "refused": true,
+      "chunk_ids": [
+        "pubg_terms_of_service_vi::chunk-0",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-12",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-11",
+        "pubg_rules_of_conduct_vi::chunk-0",
+        "pubg_privacy_policy_vi::chunk-0"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.0,
+      "context_recall": 1.0,
+      "context_precision": 0.2,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "The license is non-exclusive",
+              "supported": true,
+              "evidence": "Công ty cấp giấy phép không độc quyền"
+            },
+            {
+              "claim": "The license is revocable",
+              "supported": true,
+              "evidence": "có thể thu hồi"
+            },
+            {
+              "claim": "The license limits one copy per device for personal use",
+              "supported": true,
+              "evidence": "giới hạn để cài đặt và sử dụng một bản sao Trò chơi trên một thiết bị cho mục đích cá nhân"
+            },
+            {
+              "claim": "The license is non-transferable",
+              "supported": true,
+              "evidence": "Chuyển nhượng Giấy phép là không thể thực hiện"
+            },
+            {
+              "claim": "Violation of terms may lead to temporary suspension of account and access",
+              "supported": true,
+              "evidence": "Vi phạm có thể dẫn đến đình chỉ tạm thời hoặc vĩnh viễn tài khoản và quyền truy cập"
+            },
+            {
+              "claim": "Violation of terms may lead to permanent suspension of account and access",
+              "supported": true,
+              "evidence": "Vi phạm có thể dẫn đến đình chỉ tạm thời hoặc vĩnh viễn tài khoản và quyền truy cập"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Chunk 1 contains the official PUBG Terms of Service which likely includes licensing terms for game use."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": false,
+              "reason": "Chunk 2 discusses sanctions and account bans, not licensing terms."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Chunk 3 details policy violations and conduct, unrelated to licensing."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "Chunk 4 is about rules of conduct, not licensing or terms of service."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Chunk 5 covers privacy policy, unrelated to licensing terms."
+            }
+          ]
+        },
+        "faithfulness": {
+          "rule": "safe refusal makes no factual claims"
+        },
+        "answer_relevance": {
+          "rule": "refusal does not address the question"
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 1.0,
+        "answer_relevance": 0.0,
+        "context_recall": 0.4717,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q06",
+      "config": "B",
+      "question": "Điều khoản Dịch vụ PUBG quy định gì về giấy phép sử dụng trò chơi?",
+      "answer": "Điều khoản Dịch vụ PUBG quy định rằng người chơi được cấp giấy phép hạn chế để sử dụng dữ liệu trong trò chơi, nhất quán với Điều khoản dịch vụ. Giấy phép này có hiệu lực trong suốt thời gian sử dụng, vận hành hoặc chạy trò chơi (\"Thời hạn cấp phép\"), hoặc cho đến khi Công ty có quyết định khác. Giấy phép sẽ tự động chấm dứt nếu người chơi không thực hiện đúng theo các Điều khoản này, trong trường hợp đó người chơi phải gỡ cài đặt tất cả các bản sao của trò chơi và phần mềm trò chơi. Người chơi cũng có thể chấm dứt giấy phép bất kỳ lúc nào bằng cách gỡ cài đặt phần mềm trò chơi khỏi thiết bị hoặc phần cứng của mình (bao gồm mọi bản sao lưu trữ) [1], [3].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_rules_of_conduct_vi::chunk-7",
+        "pubg_terms_of_service_vi::chunk-16",
+        "pubg_terms_of_service_vi::chunk-9",
+        "pubg_terms_of_service_vi::chunk-0",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-12"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 0.6,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "The license is non-exclusive",
+              "supported": true,
+              "evidence": "Công ty cấp giấy phép không độc quyền"
+            },
+            {
+              "claim": "The license is revocable",
+              "supported": true,
+              "evidence": "có thể thu hồi"
+            },
+            {
+              "claim": "The license limits one copy per device for personal use",
+              "supported": true,
+              "evidence": "giới hạn để cài đặt và sử dụng một bản sao Trò chơi trên một thiết bị cho mục đích cá nhân"
+            },
+            {
+              "claim": "The license is non-transferable",
+              "supported": true,
+              "evidence": "Chuyển nhượng Giấy phép là không thể thực hiện"
+            },
+            {
+              "claim": "Violation of terms may lead to temporary suspension of account and access",
+              "supported": true,
+              "evidence": "Vi phạm có thể dẫn đến đình chỉ tạm thời ... tài khoản và quyền truy cập"
+            },
+            {
+              "claim": "Violation of terms may lead to permanent suspension of account and access",
+              "supported": true,
+              "evidence": "Vi phạm có thể dẫn đến ... đình chỉ ... vĩnh viễn tài khoản và quyền truy cập"
+            },
+            {
+              "claim": "The license allows use only consistent with the Terms of Service",
+              "supported": true,
+              "evidence": "bạn chỉ được cấp giấy phép hạn chế để sử dụng dữ liệu trong trò chơi, nhất quán với Điều khoản dịch vụ"
+            },
+            {
+              "claim": "The license terminates automatically if terms are violated",
+              "supported": true,
+              "evidence": "Giấy phép sẽ tự động chấm dứt nếu bạn không thực hiện đúng theo các Điều khoản này"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Mentions limited license to use game data consistent with Terms of Service."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Specifies user must use game and services according to Terms and License, prohibiting unauthorized use."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": true,
+              "reason": "Describes license duration, automatic termination conditions, and user obligations upon termination."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "General metadata about Terms of Service, no specific license details."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Concerns sanctions and penalties, unrelated to license terms."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "Người chơi được cấp giấy phép hạn chế để sử dụng dữ liệu trong trò chơi",
+              "supported": true,
+              "evidence": "bạn chỉ được cấp giấy phép hạn chế để sử dụng dữ liệu trong trò chơi"
+            },
+            {
+              "claim": "Giấy phép này có hiệu lực trong suốt thời gian sử dụng, vận hành hoặc chạy trò chơi",
+              "supported": true,
+              "evidence": "sử dụng, vận hành hoặc chạy Trò chơi (“Thời hạn cấp phép”)"
+            },
+            {
+              "claim": "Giấy phép có hiệu lực cho đến khi Công ty có quyết định khác",
+              "supported": true,
+              "evidence": "hoặc cho đến khi Công ty có quyết định khác"
+            },
+            {
+              "claim": "Giấy phép sẽ tự động chấm dứt nếu người chơi không thực hiện đúng theo các Điều khoản",
+              "supported": true,
+              "evidence": "Giấy phép sẽ tự động chấm dứt nếu bạn không thực hiện đúng theo các Điều khoản này"
+            },
+            {
+              "claim": "Nếu giấy phép chấm dứt, người chơi phải gỡ cài đặt tất cả các bản sao của trò chơi và phần mềm trò chơi",
+              "supported": true,
+              "evidence": "bạn phải gỡ cài đặt tất cả các bản sao của Trò chơi và Phần mềm trò chơi"
+            },
+            {
+              "claim": "Người chơi có thể chấm dứt giấy phép bất kỳ lúc nào bằng cách gỡ cài đặt phần mềm trò chơi khỏi thiết bị hoặc phần cứng của mình",
+              "supported": true,
+              "evidence": "Bạn cũng có thể chấm dứt Giấy phép bất kỳ lúc nào bằng cách gỡ cài đặt Phần mềm Trò chơi khỏi thiết bị hoặc phần cứng của bạn"
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "ANSWER fully and directly explains the licensing terms for using the game as specified in PUBG's Terms of Service."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.9341,
+        "answer_relevance": 0.8667,
+        "context_recall": 0.7358,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q07",
+      "config": "A",
+      "question": "KRAFTON thu thập và chia sẻ thông tin cá nhân của người chơi như thế nào?",
+      "answer": "KRAFTON, Inc. thu thập, lưu trữ, sử dụng và chia sẻ dữ liệu cá nhân của người chơi để cung cấp Trò chơi và Dịch vụ. Họ hành động theo lợi ích hợp pháp để xử lý dữ liệu một cách hợp pháp cho việc quản lý chủ thể dữ liệu và thực hiện các dịch vụ liên quan [3]. Chi tiết về cách thức thu thập và chia sẻ thông tin được trình bày trong Chính sách Bảo mật PUBG [2].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_rules_of_conduct_vi::chunk-10",
+        "pubg_privacy_policy_vi::chunk-7",
+        "pubg_privacy_policy_vi::chunk-1",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-8",
+        "pubg_privacy_policy_vi::chunk-8"
+      ],
+      "faithfulness": 0.6667,
+      "answer_relevance": 0.8,
+      "context_recall": 1.0,
+      "context_precision": 0.6,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "KRAFTON thu thập thông tin nhận dạng, thiết bị, hoạt động trò chơi và mua hàng",
+              "supported": true,
+              "evidence": "KRAFTON, Inc. sẽ thu thập, lưu trữ, sử dụng và chia sẻ dữ liệu để cung cấp Trò chơi và Dịch vụ."
+            },
+            {
+              "claim": "KRAFTON thu thập thông tin để vận hành và cải thiện trò chơi",
+              "supported": true,
+              "evidence": "KRAFTON, Inc. sẽ thu thập, lưu trữ, sử dụng và chia sẻ dữ liệu để cung cấp Trò chơi và Dịch vụ."
+            },
+            {
+              "claim": "KRAFTON thu thập thông tin để chống gian lận",
+              "supported": true,
+              "evidence": "Chúng tôi chia sẻ thông tin với nhà cung cấp dịch vụ chống gian lận"
+            },
+            {
+              "claim": "KRAFTON thu thập thông tin để tuân thủ pháp luật",
+              "supported": true,
+              "evidence": "Chúng tôi sẽ hành động theo lợi ích hợp pháp để xử lý dữ liệu một cách hợp pháp"
+            },
+            {
+              "claim": "KRAFTON chia sẻ thông tin với nhà cung cấp dịch vụ chống gian lận, đám mây, thanh toán, chăm sóc khách hàng",
+              "supported": true,
+              "evidence": "Chúng tôi chia sẻ thông tin với nhà cung cấp dịch vụ chống gian lận, điện toán đám mây, thanh toán và chăm sóc khách hàng."
+            },
+            {
+              "claim": "KRAFTON không bán thông tin cá nhân",
+              "supported": true,
+              "evidence": "Chúng tôi không bán thông tin cá nhân"
+            },
+            {
+              "claim": "KRAFTON không chia sẻ thông tin cho quảng cáo theo hành vi liên ngữ cảnh",
+              "supported": true,
+              "evidence": "Chúng tôi không chia sẻ cho quảng cáo theo hành vi liên ngữ cảnh."
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": false,
+              "reason": "Does not mention how KRAFTON collects or shares personal information."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Contains sections titles about information collected, usage, and sharing, indicating relevant privacy policy content."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": true,
+              "reason": "Mentions KRAFTON as data controller and that it collects, stores, uses, and shares data to provide games and services."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "Discusses rules about livestreaming and competition fairness, unrelated to personal data collection or sharing."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": true,
+              "reason": "Introduces KRAFTON's collection, use, and processing of user information, relevant to the question."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "KRAFTON, Inc. thu thập, lưu trữ, sử dụng và chia sẻ dữ liệu cá nhân của người chơi để cung cấp Trò chơi và Dịch vụ",
+              "supported": true,
+              "evidence": "KRAFTON, Inc. sẽ thu thập, lưu trữ, sử dụng và chia sẻ dữ liệu để cung cấp Trò chơi và Dịch vụ."
+            },
+            {
+              "claim": "KRAFTON hành động theo lợi ích hợp pháp để xử lý dữ liệu một cách hợp pháp cho việc quản lý chủ thể dữ liệu và thực hiện các dịch vụ liên quan",
+              "supported": true,
+              "evidence": "Chúng tôi sẽ hành động theo lợi ích hợp pháp để xử lý dữ liệu một cách hợp pháp cho việc quản lý chủ thể dữ liệu và thực hiện"
+            },
+            {
+              "claim": "Chi tiết về cách thức thu thập và chia sẻ thông tin được trình bày trong Chính sách Bảo mật PUBG",
+              "supported": false,
+              "evidence": "none"
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 0.8,
+          "reason": "The answer explains that KRAFTON collects, stores, uses, and shares personal data for game services and legal purposes, and refers to the PUBG Privacy Policy for details, but does not specify exact methods of collection and sharing."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.9206,
+        "answer_relevance": 0.8125,
+        "context_recall": 0.5208,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q07",
+      "config": "B",
+      "question": "KRAFTON thu thập và chia sẻ thông tin cá nhân của người chơi như thế nào?",
+      "answer": "KRAFTON thu thập, lưu trữ, sử dụng và chia sẻ dữ liệu cá nhân để cung cấp trò chơi và dịch vụ, hành động theo lợi ích hợp pháp để xử lý dữ liệu một cách hợp pháp cho việc quản lý chủ thể dữ liệu và thực hiện [2]. Họ chia sẻ thông tin cá nhân với bên thứ ba như nhà cung cấp dịch vụ đám mây, dịch vụ chăm sóc khách hàng và quản lý cộng đồng nhằm cung cấp môi trường trò chơi tốt nhất, nhưng không bán thông tin cá nhân cho bên thứ ba và không chia sẻ thông tin cá nhân với mục đích quảng cáo theo hành vi liên ngữ cảnh [4][5].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_privacy_policy_vi::chunk-7",
+        "pubg_privacy_policy_vi::chunk-1",
+        "pubg_rules_of_conduct_vi::chunk-10",
+        "pubg_privacy_policy_vi::chunk-4",
+        "pubg_privacy_policy_vi::chunk-21"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 0.8,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "KRAFTON thu thập thông tin nhận dạng, thiết bị, hoạt động trò chơi và mua hàng",
+              "supported": true,
+              "evidence": "KRAFTON, Inc. sẽ thu thập, lưu trữ, sử dụng và chia sẻ dữ liệu để cung cấp Trò chơi và Dịch vụ"
+            },
+            {
+              "claim": "KRAFTON thu thập thông tin để vận hành và cải thiện trò chơi",
+              "supported": true,
+              "evidence": "Chúng tôi chia sẻ thông tin của bạn để cung cấp cho bạn môi trường trò chơi tốt nhất"
+            },
+            {
+              "claim": "KRAFTON thu thập thông tin để chống gian lận",
+              "supported": true,
+              "evidence": "chia sẻ với nhà cung cấp dịch vụ chống gian lận"
+            },
+            {
+              "claim": "KRAFTON thu thập thông tin để tuân thủ pháp luật",
+              "supported": true,
+              "evidence": "Chúng tôi sẽ hành động theo lợi ích hợp pháp để xử lý dữ liệu một cách hợp pháp"
+            },
+            {
+              "claim": "KRAFTON chia sẻ thông tin với nhà cung cấp dịch vụ chống gian lận, đám mây, thanh toán, chăm sóc khách hàng",
+              "supported": true,
+              "evidence": "chia sẻ với nhà cung cấp dịch vụ đám mây, dịch vụ chăm sóc khách hàng, chống gian lận, thanh toán"
+            },
+            {
+              "claim": "KRAFTON không bán thông tin cá nhân",
+              "supported": true,
+              "evidence": "Chúng tôi không bán thông tin cá nhân cho bên thứ ba"
+            },
+            {
+              "claim": "KRAFTON không chia sẻ thông tin cá nhân cho quảng cáo theo hành vi liên ngữ cảnh",
+              "supported": true,
+              "evidence": "không chia sẻ thông tin cá nhân với bên thứ ba nhằm mục đích quảng cáo theo hành vi liên ngữ cảnh"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Contains sections on information collected, usage, and sharing relevant to the question."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Explains KRAFTON's role as data controller and their lawful processing of personal data."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Discusses user responsibilities and reporting issues, not about data collection or sharing."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": true,
+              "reason": "Details how KRAFTON shares personal information and their policy against selling data."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": true,
+              "reason": "Describes sharing personal data with third-party service providers for game and service provision."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "KRAFTON thu thập, lưu trữ, sử dụng và chia sẻ dữ liệu cá nhân để cung cấp trò chơi và dịch vụ",
+              "supported": true,
+              "evidence": "KRAFTON, Inc. sẽ thu thập, lưu trữ, sử dụng và chia sẻ dữ liệu để cung cấp Trò chơi và Dịch vụ."
+            },
+            {
+              "claim": "KRAFTON hành động theo lợi ích hợp pháp để xử lý dữ liệu một cách hợp pháp cho việc quản lý chủ thể dữ liệu và thực hiện",
+              "supported": true,
+              "evidence": "Chúng tôi sẽ hành động theo lợi ích hợp pháp để xử lý dữ liệu một cách hợp pháp cho việc quản lý chủ thể dữ liệu và thực hiện"
+            },
+            {
+              "claim": "KRAFTON chia sẻ thông tin cá nhân với bên thứ ba như nhà cung cấp dịch vụ đám mây, dịch vụ chăm sóc khách hàng và quản lý cộng đồng nhằm cung cấp môi trường trò chơi tốt nhất",
+              "supported": true,
+              "evidence": "Chúng tôi chia sẻ một số thông tin cá nhân với bên thứ ba, trong đó có các nhà cung cấp dịch vụ thay mặt chúng tôi xử lý thông tin cá nhân... chẳng hạn như dịch vụ chăm sóc khách hàng và quản lý cộng đồng"
+            },
+            {
+              "claim": "KRAFTON không bán thông tin cá nhân cho bên thứ ba",
+              "supported": true,
+              "evidence": "Tuy nhiên, chúng tôi không bán thông tin cá nhân cho bên thứ ba"
+            },
+            {
+              "claim": "KRAFTON không chia sẻ thông tin cá nhân với mục đích quảng cáo theo hành vi liên ngữ cảnh",
+              "supported": true,
+              "evidence": "và không chia sẻ thông tin cá nhân với bên thứ ba nhằm mục đích quảng cáo theo hành vi liên ngữ cảnh"
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "ANSWER clearly explains how KRAFTON collects, stores, uses, and shares personal data, including with third parties, and specifies purposes and restrictions, fully addressing the question."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.9733,
+        "answer_relevance": 0.75,
+        "context_recall": 0.7708,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q08",
+      "config": "A",
+      "question": "Người chơi có những quyền gì đối với dữ liệu cá nhân của mình trong PUBG?",
+      "answer": "Không tìm thấy đủ thông tin đáng tin cậy trong bộ tài liệu hiện có để trả lời câu hỏi này.",
+      "refused": true,
+      "chunk_ids": [
+        "pubg_privacy_policy_vi::chunk-0",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-12",
+        "pubg_rules_of_conduct_vi::chunk-0",
+        "pubg_rules_of_conduct_vi::chunk-7",
+        "pubg_terms_of_service_vi::chunk-47"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.0,
+      "context_recall": 1.0,
+      "context_precision": 0.6,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Người dùng có quyền phản đối xử lý dữ liệu cá nhân",
+              "supported": true,
+              "evidence": "Bạn được quyền phản đối hoặc yêu cầu hạn chế việc xử lý"
+            },
+            {
+              "claim": "Người dùng có quyền yêu cầu hạn chế xử lý dữ liệu cá nhân",
+              "supported": true,
+              "evidence": "Bạn được quyền phản đối hoặc yêu cầu hạn chế việc xử lý"
+            },
+            {
+              "claim": "Người dùng có quyền yêu cầu truy cập dữ liệu cá nhân",
+              "supported": true,
+              "evidence": "cũng như yêu cầu quyền truy cập"
+            },
+            {
+              "claim": "Người dùng có quyền yêu cầu cải chính dữ liệu cá nhân",
+              "supported": true,
+              "evidence": "cũng như yêu cầu quyền truy cập, cải chính"
+            },
+            {
+              "claim": "Người dùng có quyền yêu cầu xóa dữ liệu cá nhân",
+              "supported": true,
+              "evidence": "cải chính, xóa và di chuyển thông tin cá nhân của bạn"
+            },
+            {
+              "claim": "Người dùng có quyền yêu cầu di chuyển dữ liệu cá nhân",
+              "supported": true,
+              "evidence": "cải chính, xóa và di chuyển thông tin cá nhân của bạn"
+            },
+            {
+              "claim": "Người dùng có thể gửi yêu cầu qua email tới privacy@krafton.com",
+              "supported": true,
+              "evidence": "Liên hệ qua email privacy@krafton.com"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Contains PUBG Privacy Policy which likely details user rights over personal data."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": false,
+              "reason": "Discusses sanctions and account bans, unrelated to user data rights."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Focuses on rules of conduct, not on personal data rights."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": true,
+              "reason": "Mentions company rights over game data and user complaint rights, relevant to data rights."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": true,
+              "reason": "Details company ownership and user limitations on game data, relevant to user data rights."
+            }
+          ]
+        },
+        "faithfulness": {
+          "rule": "safe refusal makes no factual claims"
+        },
+        "answer_relevance": {
+          "rule": "refusal does not address the question"
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 1.0,
+        "answer_relevance": 0.1875,
+        "context_recall": 0.5714,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q08",
+      "config": "B",
+      "question": "Người chơi có những quyền gì đối với dữ liệu cá nhân của mình trong PUBG?",
+      "answer": "Người chơi có quyền khiếu nại nếu bị đối xử bất công hoặc phát sinh tổn hại khi sử dụng dịch vụ trong trò chơi [2]. KRAFTON, Inc. là bên kiểm soát dữ liệu đối với thông tin cá nhân và sẽ thu thập, lưu trữ, sử dụng và chia sẻ dữ liệu để cung cấp trò chơi và dịch vụ, hành động theo lợi ích hợp pháp để xử lý dữ liệu một cách hợp pháp [4]. Tuy nhiên, không có thông tin chi tiết hơn về các quyền cụ thể của người chơi đối với dữ liệu cá nhân trong các tài liệu hiện có.",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_terms_of_service_vi::chunk-47",
+        "pubg_rules_of_conduct_vi::chunk-7",
+        "pubg_privacy_policy_vi::chunk-0",
+        "pubg_privacy_policy_vi::chunk-1",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-12"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 0.6,
+      "context_recall": 0.875,
+      "context_precision": 0.2,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Người dùng có quyền phản đối việc xử lý dữ liệu cá nhân",
+              "supported": true,
+              "evidence": "Bạn được quyền phản đối hoặc yêu cầu hạn chế việc xử lý"
+            },
+            {
+              "claim": "Người dùng có quyền yêu cầu hạn chế xử lý dữ liệu cá nhân",
+              "supported": true,
+              "evidence": "Bạn được quyền phản đối hoặc yêu cầu hạn chế việc xử lý"
+            },
+            {
+              "claim": "Người dùng có quyền yêu cầu truy cập dữ liệu cá nhân",
+              "supported": true,
+              "evidence": "cũng như yêu cầu quyền truy cập"
+            },
+            {
+              "claim": "Người dùng có quyền yêu cầu cải chính dữ liệu cá nhân",
+              "supported": true,
+              "evidence": "cũng như yêu cầu quyền truy cập, cải chính"
+            },
+            {
+              "claim": "Người dùng có quyền yêu cầu xóa dữ liệu cá nhân",
+              "supported": true,
+              "evidence": "cải chính, xóa và di chuyển thông tin cá nhân"
+            },
+            {
+              "claim": "Người dùng có quyền yêu cầu di chuyển dữ liệu cá nhân",
+              "supported": true,
+              "evidence": "xóa và di chuyển thông tin cá nhân"
+            },
+            {
+              "claim": "Người dùng có thể gửi yêu cầu qua email privacy@krafton.com",
+              "supported": true,
+              "evidence": "Liên hệ qua email privacy@krafton.com"
+            },
+            {
+              "claim": "Người dùng có thể gửi yêu cầu bằng cách khác ngoài email",
+              "supported": false,
+              "evidence": "none"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": false,
+              "reason": "Discusses company rights over game content, not player personal data rights."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": false,
+              "reason": "Focuses on company ownership of in-game data, not player rights over personal data."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Introduces privacy policy but does not specify player rights."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": true,
+              "reason": "Mentions data controller and lawful processing of personal data, implying player data rights."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Concerns sanctions and account bans, unrelated to personal data rights."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "Người chơi có quyền khiếu nại nếu bị đối xử bất công hoặc phát sinh tổn hại khi sử dụng dịch vụ trong trò chơi",
+              "supported": true,
+              "evidence": "Nếu bạn bị đối xử bất công hoặc bị phát sinh tổn hại khi sử dụng dịch vụ trong trò chơi, bạn có quyền khiếu nại"
+            },
+            {
+              "claim": "KRAFTON, Inc. là bên kiểm soát dữ liệu đối với thông tin cá nhân",
+              "supported": true,
+              "evidence": "KRAFTON, Inc. là Bên kiểm soát dữ liệu đối với thông tin cá nhân"
+            },
+            {
+              "claim": "KRAFTON, Inc. sẽ thu thập, lưu trữ, sử dụng và chia sẻ dữ liệu để cung cấp trò chơi và dịch vụ, hành động theo lợi ích hợp pháp để xử lý dữ liệu một cách hợp pháp",
+              "supported": true,
+              "evidence": "KRAFTON, Inc. sẽ thu thập, lưu trữ, sử dụng và chia sẻ dữ liệu để cung cấp Trò chơi và Dịch vụ. Chúng tôi sẽ hành động theo lợi ích hợp pháp để xử lý dữ liệu một cách hợp pháp"
+            },
+            {
+              "claim": "Không có thông tin chi tiết hơn về các quyền cụ thể của người chơi đối với dữ liệu cá nhân trong các tài liệu hiện có",
+              "supported": true,
+              "evidence": "chính sách quyền riêng tư đầy đủ sẽ được ưu tiên xem xét. Vậy nên, hãy đảm bảo rằng bạn đã đọc kỹ toàn bộ nội dung của chính sách quyền riêng tư."
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 0.6,
+          "reason": "The answer mentions the right to complain and data control by KRAFTON but lacks detailed information on all specific personal data rights of players in PUBG."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.9178,
+        "answer_relevance": 0.75,
+        "context_recall": 0.6571,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q09",
+      "config": "A",
+      "question": "Himass và TanVuu bị xử lý vì hành vi gì tại PUBG Asia Stars 2026?",
+      "answer": "Himass và TanVuu bị xử lý vì sử dụng thông tin bên ngoài trò chơi, bao gồm việc theo dõi livestream của người tham gia khác (\"đá stream\") để đưa ra quyết định trong trận đấu tại PUBG Asia Stars 2026, làm ảnh hưởng tới tính công bằng của cuộc thi [1], [2], [3].",
+      "refused": false,
+      "chunk_ids": [
+        "justice_for_himass_tanvuu_vi::chunk-12",
+        "justice_for_himass_tanvuu_vi::chunk-16",
+        "justice_for_himass_tanvuu_vi::chunk-3",
+        "justice_for_himass_tanvuu_vi::chunk-7",
+        "justice_for_himass_tanvuu_vi::chunk-18"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 0.875,
+      "context_precision": 0.6,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Himass và TanVuu sử dụng thông tin bên ngoài trò chơi tại PUBG Asia Stars 2026",
+              "supported": true,
+              "evidence": "Himass và TanVuu đã sử dụng thông tin bên ngoài trò chơi, bao gồm việc theo dõi livestream của người tham gia khác"
+            },
+            {
+              "claim": "Himass và TanVuu xem livestream của người chơi khác (stream sniping)",
+              "supported": true,
+              "evidence": "nữ game thủ Hàn Quốc Soopi cáo buộc Himass và TanVuu có hành vi \"đá stream\""
+            },
+            {
+              "claim": "Himass và TanVuu áp dụng thông tin từ livestream vào chiến thuật thi đấu",
+              "supported": true,
+              "evidence": "để đưa ra quyết định trong trận đấu tại PUBG Asia Stars 2026"
+            },
+            {
+              "claim": "Hành vi của Himass và TanVuu vi phạm chính sách vận hành PUBG",
+              "supported": true,
+              "evidence": "Nhà phát hành cho rằng hành vi này ảnh hưởng tới tính công bằng của cuộc thi"
+            },
+            {
+              "claim": "Hành vi của Himass và TanVuu vi phạm nghĩa vụ của tuyển thủ chuyên nghiệp",
+              "supported": false,
+              "evidence": "none"
+            },
+            {
+              "claim": "KRAFTON loại Himass và TanVuu khỏi giải đấu PUBG Asia Stars 2026",
+              "supported": true,
+              "evidence": "KRAFTON lập tức loại Himass và TanVuu khỏi giải đấu"
+            },
+            {
+              "claim": "KRAFTON khóa vĩnh viễn tài khoản và cấm Himass và TanVuu tham gia các giải đấu PUBG Esports chính thức toàn cầu",
+              "supported": true,
+              "evidence": "quyết định khóa vĩnh viễn tài khoản của hai tuyển thủ Việt Nam, đồng thời cấm họ tham gia toàn bộ các giải đấu PUBG Esports chính thức trên toàn cầu"
+            },
+            {
+              "claim": "Himass và TanVuu bị tước danh hiệu đối tác PUBG Vietnam Partner",
+              "supported": true,
+              "evidence": "đồng thời tước danh hiệu đối tác của hai tuyển thủ này - PUBG Vietnam Partner"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Nêu rõ Himass và TanVuu bị xử lý vì hành vi 'đá stream' tại PUBG Asia Stars 2026."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Cung cấp thông tin về cáo buộc hành vi 'đá stream' của Himass và TanVuu."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": true,
+              "reason": "Giải thích chi tiết hành vi sử dụng thông tin bên ngoài trò chơi và hình phạt của KRAFTON."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "Nói về phản ứng và tương lai của tuyển thủ, không trực tiếp giải thích hành vi vi phạm."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Trình bày tranh luận về quy định và phản ứng cộng đồng, không nêu rõ hành vi vi phạm."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "Himass và TanVuu bị xử lý vì sử dụng thông tin bên ngoài trò chơi",
+              "supported": true,
+              "evidence": "Himass và TanVuu đã sử dụng thông tin bên ngoài trò chơi"
+            },
+            {
+              "claim": "Himass và TanVuu theo dõi livestream của người tham gia khác (đá stream) để đưa ra quyết định trong trận đấu tại PUBG Asia Stars 2026",
+              "supported": true,
+              "evidence": "theo dõi livestream của người tham gia khác, để đưa ra quyết định trong trận đấu tại PUBG Asia Stars 2026"
+            },
+            {
+              "claim": "Hành vi của Himass và TanVuu làm ảnh hưởng tới tính công bằng của cuộc thi",
+              "supported": true,
+              "evidence": "Nhà phát hành cho rằng hành vi này ảnh hưởng tới tính công bằng của cuộc thi"
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "The answer clearly states the reason for the punishment, explaining the use of external information and stream sniping at PUBG Asia Stars 2026, directly addressing the question."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.9245,
+        "answer_relevance": 0.8,
+        "context_recall": 0.6667,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q09",
+      "config": "B",
+      "question": "Himass và TanVuu bị xử lý vì hành vi gì tại PUBG Asia Stars 2026?",
+      "answer": "Himass và TanVuu bị xử lý vì sử dụng thông tin bên ngoài trò chơi, bao gồm việc theo dõi livestream của người tham gia khác (\"đá stream\"), để đưa ra quyết định trong trận đấu tại PUBG Asia Stars 2026, làm ảnh hưởng tới tính công bằng của cuộc thi [1], [2], [3].",
+      "refused": false,
+      "chunk_ids": [
+        "justice_for_himass_tanvuu_vi::chunk-12",
+        "justice_for_himass_tanvuu_vi::chunk-16",
+        "justice_for_himass_tanvuu_vi::chunk-3",
+        "justice_for_himass_tanvuu_vi::chunk-7",
+        "justice_for_himass_tanvuu_vi::chunk-18"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 0.875,
+      "context_precision": 0.6,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Himass và TanVuu sử dụng thông tin bên ngoài trò chơi tại PUBG Asia Stars 2026",
+              "supported": true,
+              "evidence": "Himass và TanVuu đã sử dụng thông tin bên ngoài trò chơi, bao gồm việc theo dõi livestream của người tham gia khác"
+            },
+            {
+              "claim": "Himass và TanVuu xem livestream của người chơi khác (stream sniping)",
+              "supported": true,
+              "evidence": "nữ game thủ Hàn Quốc Soopi cáo buộc Himass và TanVuu có hành vi \"đá stream\""
+            },
+            {
+              "claim": "Himass và TanVuu áp dụng thông tin từ livestream vào chiến thuật thi đấu",
+              "supported": true,
+              "evidence": "để đưa ra quyết định trong trận đấu tại PUBG Asia Stars 2026"
+            },
+            {
+              "claim": "Hành vi của Himass và TanVuu vi phạm chính sách vận hành PUBG",
+              "supported": true,
+              "evidence": "Nhà phát hành cho rằng hành vi này ảnh hưởng tới tính công bằng của cuộc thi"
+            },
+            {
+              "claim": "Hành vi của Himass và TanVuu vi phạm nghĩa vụ của tuyển thủ chuyên nghiệp",
+              "supported": false,
+              "evidence": "none"
+            },
+            {
+              "claim": "KRAFTON loại Himass và TanVuu khỏi giải đấu PUBG Asia Stars 2026",
+              "supported": true,
+              "evidence": "KRAFTON lập tức loại Himass và TanVuu khỏi giải đấu"
+            },
+            {
+              "claim": "KRAFTON khóa vĩnh viễn tài khoản và cấm Himass và TanVuu tham gia các giải đấu PUBG Esports chính thức toàn cầu",
+              "supported": true,
+              "evidence": "quyết định khóa vĩnh viễn tài khoản của hai tuyển thủ Việt Nam, đồng thời cấm họ tham gia toàn bộ các giải đấu PUBG Esports chính thức trên toàn cầu"
+            },
+            {
+              "claim": "Himass và TanVuu bị tước danh hiệu đối tác PUBG Vietnam Partner",
+              "supported": true,
+              "evidence": "đồng thời tước danh hiệu đối tác của hai tuyển thủ này - PUBG Vietnam Partner"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Nêu rõ Himass và TanVuu bị xử lý vì hành vi 'đá stream' tại PUBG Asia Stars 2026."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Cung cấp thông tin về cáo buộc hành vi 'đá stream' của Himass và TanVuu."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": true,
+              "reason": "Giải thích chi tiết hành vi sử dụng thông tin bên ngoài trò chơi và hình phạt của KRAFTON."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "Nói về phản ứng và tương lai của tuyển thủ, không trực tiếp giải thích hành vi vi phạm."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Trình bày tranh luận về quy định và phản ứng cộng đồng, không nêu rõ hành vi vi phạm."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "Himass và TanVuu bị xử lý vì sử dụng thông tin bên ngoài trò chơi tại PUBG Asia Stars 2026",
+              "supported": true,
+              "evidence": "Himass và TanVuu đã sử dụng thông tin bên ngoài trò chơi, bao gồm việc theo dõi livestream của người tham gia khác, để đưa ra quyết định trong trận đấu tại PUBG Asia Stars 2026."
+            },
+            {
+              "claim": "Himass và TanVuu theo dõi livestream của người tham gia khác (đá stream)",
+              "supported": true,
+              "evidence": "nữ game thủ Hàn Quốc Soopi cáo buộc Himass và TanVuu có hành vi \"đá stream\", qua đó có thể nắm bắt vị trí của cô trên bản đồ trong quá trình thi đấu."
+            },
+            {
+              "claim": "Hành vi của Himass và TanVuu làm ảnh hưởng tới tính công bằng của cuộc thi",
+              "supported": true,
+              "evidence": "Nhà phát hành cho rằng hành vi này ảnh hưởng tới tính công bằng của cuộc thi."
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "ANSWER clearly states the reason for the disciplinary action against Himass and TanVuu at PUBG Asia Stars 2026, directly addressing the question."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.9245,
+        "answer_relevance": 0.8,
+        "context_recall": 0.6667,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q10",
+      "config": "A",
+      "question": "Hình thức xử lý cụ thể mà KRAFTON áp dụng với Himass và TanVuu là gì?",
+      "answer": "KRAFTON đã lập tức loại Himass và TanVuu khỏi giải đấu, đồng thời tước danh hiệu đối tác của hai tuyển thủ này - PUBG Vietnam Partner [2].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_rules_of_conduct_vi::chunk-4",
+        "justice_for_himass_tanvuu_vi::chunk-17",
+        "pubg_rules_of_conduct_vi::chunk-1",
+        "justice_for_himass_tanvuu_vi::chunk-6",
+        "pubg_rules_of_conduct_vi::chunk-8"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 0.4,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Khóa vĩnh viễn tài khoản game PUBG: BATTLEGROUNDS của hai tuyển thủ",
+              "supported": true,
+              "evidence": "Hình thức chế tài: khóa vĩnh viễn tài khoản game PUBG: BATTLEGROUNDS"
+            },
+            {
+              "claim": "Tước quyền thi đấu vĩnh viễn tại tất cả giải đấu chính thức mọi khu vực (bao gồm PGC, PGS, PNC và các giải do KRAFTON tổ chức/phê duyệt)",
+              "supported": true,
+              "evidence": "tước quyền thi đấu vĩnh viễn tại tất cả các giải đấu chính thức ở mọi khu vực, bao gồm PGC, PGS, PNC và các giải Esports do KRAFTON tổ chức hoặc phê duyệt"
+            },
+            {
+              "claim": "Hình thức chế tài có hiệu lực ngay",
+              "supported": true,
+              "evidence": "Thời điểm áp dụng ngay từ khi công bố"
+            },
+            {
+              "claim": "Hai tuyển thủ vẫn có quyền giải trình theo quy trình Esports",
+              "supported": true,
+              "evidence": "tuyển thủ có quyền giải trình"
+            },
+            {
+              "claim": "KRAFTON loại Himass và TanVuu khỏi giải đấu",
+              "supported": true,
+              "evidence": "KRAFTON lập tức loại Himass và TanVuu khỏi giải đấu"
+            },
+            {
+              "claim": "KRAFTON tước danh hiệu đối tác PUBG Vietnam Partner của hai tuyển thủ",
+              "supported": true,
+              "evidence": "đồng thời tước danh hiệu đối tác của hai tuyển thủ này - PUBG Vietnam Partner"
+            },
+            {
+              "claim": "Quá trình xác minh chưa hoàn tất khi công bố thông tin",
+              "supported": true,
+              "evidence": "đơn vị này thừa nhận đã vội vàng công bố thông tin khi quá trình xác minh chưa hoàn tất"
+            },
+            {
+              "claim": "Chưa có kết luận hai tuyển thủ chủ động theo dõi màn hình đối phương để thu lợi thế",
+              "supported": true,
+              "evidence": "chưa có kết luận nào cho thấy họ chủ động theo dõi màn hình của đối phương nhằm thu lợi thế"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": false,
+              "reason": "General responsibilities of KRAFTON, no specific action on Himass and TanVuu"
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Details the specific actions KRAFTON took against Himass and TanVuu"
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Describes the code of conduct generally, no specific mention of Himass and TanVuu"
+            },
+            {
+              "chunk_index": 4,
+              "relevant": true,
+              "reason": "Mentions ongoing review and appeal process related to Himass"
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "General statement about user obligations, no specific action on Himass and TanVuu"
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "KRAFTON đã lập tức loại Himass và TanVuu khỏi giải đấu",
+              "supported": true,
+              "evidence": "KRAFTON lập tức loại Himass và TanVuu khỏi giải đấu"
+            },
+            {
+              "claim": "KRAFTON tước danh hiệu đối tác của hai tuyển thủ này - PUBG Vietnam Partner",
+              "supported": true,
+              "evidence": "đồng thời tước danh hiệu đối tác của hai tuyển thủ này - PUBG Vietnam Partner"
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "The answer directly states the specific actions KRAFTON took against Himass and TanVuu, fully addressing the question."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 1.0,
+        "answer_relevance": 0.25,
+        "context_recall": 0.6154,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q10",
+      "config": "B",
+      "question": "Hình thức xử lý cụ thể mà KRAFTON áp dụng với Himass và TanVuu là gì?",
+      "answer": "KRAFTON đã loại Himass và TanVuu khỏi giải đấu PUBG Asia Stars 2026, đồng thời tước danh hiệu đối tác của hai tuyển thủ này - PUBG Vietnam Partner [2], [5]. Ngoài ra, việc xử lý này dựa trên vi phạm chính sách vận hành PUBG về cản trở trải nghiệm game, quấy rối và lạm dụng, cũng như vi phạm nghĩa vụ giữ gìn phẩm chất và hành vi của tuyển thủ PUBG Esports chuyên nghiệp [4].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_rules_of_conduct_vi::chunk-1",
+        "justice_for_himass_tanvuu_vi::chunk-12",
+        "pubg_rules_of_conduct_vi::chunk-4",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-10",
+        "justice_for_himass_tanvuu_vi::chunk-17"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 0.875,
+      "context_precision": 0.6,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Khóa vĩnh viễn tài khoản game PUBG: BATTLEGROUNDS của hai tuyển thủ",
+              "supported": false,
+              "evidence": "none"
+            },
+            {
+              "claim": "Tước quyền thi đấu vĩnh viễn tại tất cả giải đấu chính thức mọi khu vực (bao gồm PGC, PGS, PNC và các giải do KRAFTON tổ chức/phê duyệt)",
+              "supported": true,
+              "evidence": "tước quyền thi đấu vĩnh viễn tại tất cả các giải đấu chính thức ở mọi khu vực, bao gồm PGC, PGS, PNC và các giải Esports do KRAFTON tổ chức hoặc phê duyệt"
+            },
+            {
+              "claim": "Hình thức chế tài có hiệu lực ngay",
+              "supported": true,
+              "evidence": "Thời điểm áp dụng ngay từ khi công bố"
+            },
+            {
+              "claim": "Hai tuyển thủ vẫn có quyền giải trình theo quy trình Esports",
+              "supported": true,
+              "evidence": "tuyển thủ có quyền giải trình"
+            },
+            {
+              "claim": "Hai tuyển thủ bị loại khỏi giải đấu PUBG Asia Stars 2026",
+              "supported": true,
+              "evidence": "KRAFTON lập tức loại Himass và TanVuu khỏi giải đấu"
+            },
+            {
+              "claim": "Hai tuyển thủ bị tước danh hiệu đối tác PUBG Vietnam Partner",
+              "supported": true,
+              "evidence": "đồng thời tước danh hiệu đối tác của hai tuyển thủ này - PUBG Vietnam Partner"
+            },
+            {
+              "claim": "KRAFTON thừa nhận đã vội vàng công bố thông tin khi quá trình xác minh chưa hoàn tất",
+              "supported": true,
+              "evidence": "đơn vị này thừa nhận đã vội vàng công bố thông tin khi quá trình xác minh chưa hoàn tất"
+            },
+            {
+              "claim": "Kết quả kiểm tra không có kết luận hai tuyển thủ chủ động theo dõi màn hình đối phương để thu lợi thế",
+              "supported": true,
+              "evidence": "chưa có kết luận nào cho thấy họ chủ động theo dõi màn hình của đối phương nhằm thu lợi thế trong thi đấu"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": false,
+              "reason": "General rules of conduct, no specific handling of Himass and TanVuu"
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Describes KRAFTON's immediate action to remove Himass and TanVuu from the tournament and revoke their partner titles"
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "General responsibilities of KRAFTON, no specific mention of Himass and TanVuu"
+            },
+            {
+              "chunk_index": 4,
+              "relevant": true,
+              "reason": "Details the reasons and basis for KRAFTON's disciplinary actions against Himass and TanVuu"
+            },
+            {
+              "chunk_index": 5,
+              "relevant": true,
+              "reason": "Mentions removal from tournament and partner status revocation, plus later admission of premature announcement"
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "KRAFTON đã loại Himass và TanVuu khỏi giải đấu PUBG Asia Stars 2026",
+              "supported": true,
+              "evidence": "KRAFTON lập tức loại Himass và TanVuu khỏi giải đấu"
+            },
+            {
+              "claim": "KRAFTON tước danh hiệu đối tác của Himass và TanVuu - PUBG Vietnam Partner",
+              "supported": true,
+              "evidence": "đồng thời tước danh hiệu đối tác của hai tuyển thủ này - PUBG Vietnam Partner"
+            },
+            {
+              "claim": "Việc xử lý dựa trên vi phạm chính sách vận hành PUBG về cản trở trải nghiệm game, quấy rối và lạm dụng",
+              "supported": true,
+              "evidence": "Vi phạm chính sách vận hành PUBG: BATTLEGROUNDSMục 5.10 về cản trở trải nghiệm game và nghiêm cấm quấy rối.Mục 5.12 về lạm dụng"
+            },
+            {
+              "claim": "Việc xử lý dựa trên vi phạm nghĩa vụ giữ gìn phẩm chất và hành vi của tuyển thủ PUBG Esports chuyên nghiệp",
+              "supported": true,
+              "evidence": "Vi phạm nghĩa vụ giữ gìn phẩm chất và hành vi của tuyển thủ PUBG Esports chuyên nghiệp"
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "The answer clearly states the specific actions KRAFTON took against Himass and TanVuu, including removal from the tournament and revocation of partner titles, directly addressing the question."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.9219,
+        "answer_relevance": 0.4375,
+        "context_recall": 0.5962,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q11",
+      "config": "A",
+      "question": "KRAFTON thừa nhận trách nhiệm gì trong khâu vận hành giải PUBG Asia Stars?",
+      "answer": "KRAFTON thừa nhận trách nhiệm vận hành rõ ràng trong việc không thể đưa ra các hướng dẫn và biện pháp xử lý rõ ràng dựa trên các nguyên tắc ngay từ giai đoạn đầu phát sinh sự việc, gây ra sự hỗn loạn và tranh cãi lớn do việc truyền đạt các quy định cũng như quy trình một cách chậm trễ và thiếu nhất quán [3].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-14",
+        "justice_for_himass_tanvuu_vi::chunk-3",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-15",
+        "justice_for_himass_tanvuu_vi::chunk-17",
+        "justice_for_himass_tanvuu_vi::chunk-6"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 0.4,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "KRAFTON thừa nhận không đưa ra hướng dẫn và biện pháp xử lý rõ ràng ngay từ đầu",
+              "supported": true,
+              "evidence": "Việc không thể đưa ra các hướng dẫn và biện pháp xử lý rõ ràng dựa trên các nguyên tắc nêu trên ngay từ giai đoạn đầu phát sinh sự việc là trách nhiệm vận hành rõ ràng của KRAFTON."
+            },
+            {
+              "claim": "KRAFTON truyền đạt quy định chậm trễ thiếu nhất quán",
+              "supported": true,
+              "evidence": "đã gây ra sự hỗn loạn và tranh cãi lớn do việc truyền đạt các quy định cũng như quy trình một cách chậm trễ và thiếu nhất quán."
+            },
+            {
+              "claim": "Việc truyền đạt quy định chậm trễ thiếu nhất quán gây hỗn loạn và tranh cãi",
+              "supported": true,
+              "evidence": "đã gây ra sự hỗn loạn và tranh cãi lớn do việc truyền đạt các quy định cũng như quy trình một cách chậm trễ và thiếu nhất quán."
+            },
+            {
+              "claim": "KRAFTON xin lỗi vì truyền đạt quy định chậm trễ thiếu nhất quán",
+              "supported": true,
+              "evidence": "Chúng tôi một lần nữa cúi đầu xin lỗi toàn thể người tham gia và người hâm mộ vì đã gây ra sự hỗn loạn và tranh cãi lớn"
+            },
+            {
+              "claim": "KRAFTON chịu trách nhiệm vận hành quy trình",
+              "supported": true,
+              "evidence": "Việc không thể đưa ra các hướng dẫn và biện pháp xử lý rõ ràng ... là trách nhiệm vận hành rõ ràng của KRAFTON."
+            },
+            {
+              "claim": "KRAFTON rà soát nội bộ quy trình vận hành",
+              "supported": true,
+              "evidence": "đồng thời rà soát nội bộ toàn bộ quá trình vận hành sự kiện."
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": false,
+              "reason": "No explicit mention of KRAFTON's responsibility in operation."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": false,
+              "reason": "Focuses on player misconduct and sanctions, not KRAFTON's operational responsibility."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": true,
+              "reason": "Explicitly states KRAFTON's operational responsibility and apologizes for mismanagement."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": true,
+              "reason": "Mentions KRAFTON's premature announcement and verification process issues, implying operational faults."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Discusses players' rights to appeal, not KRAFTON's operational responsibility."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "KRAFTON thừa nhận trách nhiệm vận hành rõ ràng trong việc không thể đưa ra các hướng dẫn và biện pháp xử lý rõ ràng dựa trên các nguyên tắc ngay từ giai đoạn đầu phát sinh sự việc",
+              "supported": true,
+              "evidence": "Việc không thể đưa ra các hướng dẫn và biện pháp xử lý rõ ràng dựa trên các nguyên tắc nêu trên ngay từ giai đoạn đầu phát sinh sự việc là trách nhiệm vận hành rõ ràng của KRAFTON."
+            },
+            {
+              "claim": "Việc không đưa ra các hướng dẫn và biện pháp xử lý rõ ràng gây ra sự hỗn loạn và tranh cãi lớn do việc truyền đạt các quy định cũng như quy trình một cách chậm trễ và thiếu nhất quán",
+              "supported": true,
+              "evidence": "Chúng tôi một lần nữa cúi đầu xin lỗi toàn thể người tham gia và người hâm mộ vì đã gây ra sự hỗn loạn và tranh cãi lớn do việc truyền đạt các quy định cũng như quy trình một cách chậm trễ và thiếu nhất quán."
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "ANSWER clearly states KRAFTON's responsibility in operational management and communication issues during the PUBG Asia Stars event."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.9825,
+        "answer_relevance": 0.5714,
+        "context_recall": 0.9123,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q11",
+      "config": "B",
+      "question": "KRAFTON thừa nhận trách nhiệm gì trong khâu vận hành giải PUBG Asia Stars?",
+      "answer": "KRAFTON thừa nhận trách nhiệm vận hành rõ ràng trong việc không thể đưa ra các hướng dẫn và biện pháp xử lý rõ ràng dựa trên các nguyên tắc ngay từ giai đoạn đầu phát sinh sự việc, gây ra sự hỗn loạn và tranh cãi lớn do việc truyền đạt các quy định cũng như quy trình một cách chậm trễ và thiếu nhất quán. Họ cũng hoàn toàn chịu trách nhiệm về tất cả những vấn đề đã xảy ra trong quá trình vận hành và xử lý sự cố giải đấu PUBG Asia Stars [3], [4].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-14",
+        "justice_for_himass_tanvuu_vi::chunk-17",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-17",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-15",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-0"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 0.8,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "KRAFTON thừa nhận không đưa ra hướng dẫn và biện pháp xử lý rõ ràng ngay từ đầu",
+              "supported": true,
+              "evidence": "Việc không thể đưa ra các hướng dẫn và biện pháp xử lý rõ ràng dựa trên các nguyên tắc nêu trên ngay từ giai đoạn đầu phát sinh sự việc là trách nhiệm vận hành rõ ràng của KRAFTON."
+            },
+            {
+              "claim": "KRAFTON truyền đạt quy định chậm trễ thiếu nhất quán",
+              "supported": true,
+              "evidence": "đã gây ra sự hỗn loạn và tranh cãi lớn do việc truyền đạt các quy định cũng như quy trình một cách chậm trễ và thiếu nhất quán."
+            },
+            {
+              "claim": "Việc truyền đạt quy định chậm trễ thiếu nhất quán gây hỗn loạn và tranh cãi",
+              "supported": true,
+              "evidence": "đã gây ra sự hỗn loạn và tranh cãi lớn do việc truyền đạt các quy định cũng như quy trình một cách chậm trễ và thiếu nhất quán."
+            },
+            {
+              "claim": "KRAFTON xin lỗi vì những sai sót trong vận hành",
+              "supported": true,
+              "evidence": "Chúng tôi một lần nữa cúi đầu xin lỗi toàn thể người tham gia và người hâm mộ"
+            },
+            {
+              "claim": "KRAFTON chịu trách nhiệm vận hành sự kiện",
+              "supported": true,
+              "evidence": "Chúng tôi thấu hiểu và hoàn toàn chịu trách nhiệm về tất cả những vấn đề đã xảy ra trong quá trình vận hành và xử lý sự cố giải đấu PUBG Asia Stars"
+            },
+            {
+              "claim": "KRAFTON rà soát nội bộ quy trình vận hành",
+              "supported": true,
+              "evidence": "đồng thời rà soát nội bộ toàn bộ quá trình vận hành sự kiện."
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": false,
+              "reason": "No explicit mention of KRAFTON's responsibility in operation."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Mentions KRAFTON's admission of premature announcement and investigation status."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": true,
+              "reason": "KRAFTON accepts full responsibility for issues in operation and incident handling."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": true,
+              "reason": "KRAFTON admits operational responsibility for unclear guidance and delayed communication."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": true,
+              "reason": "KRAFTON apologizes for failing to protect fairness and causing public concern during operation."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "KRAFTON thừa nhận trách nhiệm vận hành rõ ràng trong việc không thể đưa ra các hướng dẫn và biện pháp xử lý rõ ràng dựa trên các nguyên tắc ngay từ giai đoạn đầu phát sinh sự việc",
+              "supported": true,
+              "evidence": "Việc không thể đưa ra các hướng dẫn và biện pháp xử lý rõ ràng dựa trên các nguyên tắc nêu trên ngay từ giai đoạn đầu phát sinh sự việc là trách nhiệm vận hành rõ ràng của KRAFTON."
+            },
+            {
+              "claim": "KRAFTON gây ra sự hỗn loạn và tranh cãi lớn do việc truyền đạt các quy định cũng như quy trình một cách chậm trễ và thiếu nhất quán",
+              "supported": true,
+              "evidence": "Chúng tôi một lần nữa cúi đầu xin lỗi toàn thể người tham gia và người hâm mộ vì đã gây ra sự hỗn loạn và tranh cãi lớn do việc truyền đạt các quy định cũng như quy trình một cách chậm trễ và thiếu nhất quán."
+            },
+            {
+              "claim": "KRAFTON hoàn toàn chịu trách nhiệm về tất cả những vấn đề đã xảy ra trong quá trình vận hành và xử lý sự cố giải đấu PUBG Asia Stars",
+              "supported": true,
+              "evidence": "Chúng tôi thấu hiểu và hoàn toàn chịu trách nhiệm về tất cả những vấn đề đã xảy ra trong quá trình vận hành và xử lý sự cố giải đấu PUBG Asia Stars"
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "ANSWER clearly states KRAFTON's responsibility in operational failures and handling issues during PUBG Asia Stars, directly addressing the question."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.974,
+        "answer_relevance": 0.8571,
+        "context_recall": 0.8947,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q12",
+      "config": "A",
+      "question": "Chiến dịch Justice for PUBG VN đòi hỏi điều gì?",
+      "answer": "Chiến dịch Justice for PUBG VN đòi hỏi nếu đã có sai phạm thì hãy xử lý; nhưng hình phạt cần được đặt trong khuôn khổ luật rõ ràng, quy trình minh bạch và nguyên tắc tương xứng [1].",
+      "refused": false,
+      "chunk_ids": [
+        "justice_for_himass_tanvuu_vi::chunk-7",
+        "pubg_rules_of_conduct_vi::chunk-0",
+        "justice_for_himass_tanvuu_vi::chunk-1",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-11",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-2"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 0.4,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Chiến dịch Justice for PUBG VN đạt hơn 4,1 triệu lượt ủng hộ",
+              "supported": true,
+              "evidence": "Bộ đếm trên website hiện vượt mốc 4,1 triệu lượt ủng hộ."
+            },
+            {
+              "claim": "Chiến dịch yêu cầu xem xét lại mức độ xử lý cho hai game thủ Việt Nam",
+              "supported": true,
+              "evidence": "thông điệp \"Justice for PUBG VN\" có thể được nhìn nhận như một yêu cầu rộng hơn: nếu đã có sai phạm, hãy xử lý"
+            },
+            {
+              "claim": "Chiến dịch yêu cầu bảo đảm quy trình công bằng minh bạch cho hai game thủ Việt Nam",
+              "supported": true,
+              "evidence": "hình phạt cũng cần được đặt trong một khuôn khổ luật rõ ràng, quy trình minh bạch"
+            },
+            {
+              "claim": "Lập luận hình phạt cần tương xứng",
+              "supported": true,
+              "evidence": "nguyên tắc tương xứng"
+            },
+            {
+              "claim": "Hai game thủ Việt Nam là Himass và TanVuu",
+              "supported": true,
+              "evidence": "Himass và TanVuu đã chấm dứt sự nghiệp PUBG PC của mình."
+            },
+            {
+              "claim": "Hình phạt cho hai game thủ là cấm vĩnh viễn khỏi PUBG: BATTLEGROUNDS và hệ thống giải đấu chính thức",
+              "supported": true,
+              "evidence": "KRAFTON công bố quyết định cấm vĩnh viễn Himass và TanVuu khỏi PUBG: BATTLEGROUNDS cũng như toàn bộ hệ thống giải đấu chính thức"
+            },
+            {
+              "claim": "Chiến dịch Justice for PUBG VN có thông điệp tập trung vào yêu cầu xem xét lại mức độ xử lý",
+              "supported": true,
+              "evidence": "thông điệp \"Justice for PUBG VN\" có thể được nhìn nhận như một yêu cầu rộng hơn: nếu đã có sai phạm, hãy xử lý"
+            },
+            {
+              "claim": "Chiến dịch yêu cầu hình phạt đặt trong khuôn khổ luật rõ ràng",
+              "supported": true,
+              "evidence": "hình phạt cũng cần được đặt trong một khuôn khổ luật rõ ràng"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Nêu yêu cầu của chiến dịch Justice for PUBG VN về xử lý sai phạm trong khuôn khổ luật rõ ràng và minh bạch."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": false,
+              "reason": "Chỉ cung cấp quy tắc ứng xử chung của PUBG, không liên quan trực tiếp đến yêu cầu của chiến dịch."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": true,
+              "reason": "Mô tả sự kiện và mức độ ủng hộ chiến dịch Justice for PUBG VN, cho thấy mục đích và quy mô chiến dịch."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "Liệt kê các vi phạm chính sách nhưng không nói rõ chiến dịch đòi hỏi điều gì."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Kết quả điều tra vi phạm của tuyển thủ, không nêu yêu cầu của chiến dịch."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "Chiến dịch Justice for PUBG VN đòi hỏi nếu đã có sai phạm thì hãy xử lý",
+              "supported": true,
+              "evidence": "nếu đã có sai phạm, hãy xử lý"
+            },
+            {
+              "claim": "Hình phạt cần được đặt trong khuôn khổ luật rõ ràng, quy trình minh bạch và nguyên tắc tương xứng",
+              "supported": true,
+              "evidence": "hình phạt cũng cần được đặt trong một khuôn khổ luật rõ ràng, quy trình minh bạch và nguyên tắc tương xứng"
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "ANSWER directly states the demands of the Justice for PUBG VN campaign, including handling violations with clear laws, transparent procedures, and proportional principles."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.9231,
+        "answer_relevance": 0.8,
+        "context_recall": 0.8039,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q12",
+      "config": "B",
+      "question": "Chiến dịch Justice for PUBG VN đòi hỏi điều gì?",
+      "answer": "Chiến dịch Justice for PUBG VN đòi hỏi nếu đã có sai phạm thì hãy xử lý; nhưng hình phạt cần được đặt trong khuôn khổ luật rõ ràng, quy trình minh bạch và nguyên tắc tương xứng [1].",
+      "refused": false,
+      "chunk_ids": [
+        "justice_for_himass_tanvuu_vi::chunk-7",
+        "justice_for_himass_tanvuu_vi::chunk-1",
+        "justice_for_himass_tanvuu_vi::chunk-0",
+        "pubg_rules_of_conduct_vi::chunk-0",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-14"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 0.2,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Chiến dịch Justice for PUBG VN đạt hơn 4,1 triệu lượt ủng hộ",
+              "supported": true,
+              "evidence": "chiến dịch Justice for PUBG VN tiếp tục ghi nhận tốc độ tăng trưởng chóng mặt. Bộ đếm trên website hiện vượt mốc 4,1 triệu lượt ủng hộ"
+            },
+            {
+              "claim": "Chiến dịch yêu cầu xem xét lại mức độ xử lý cho hai game thủ Việt Nam",
+              "supported": true,
+              "evidence": "thông điệp \"Justice for PUBG VN\" có thể được nhìn nhận như một yêu cầu rộng hơn: nếu đã có sai phạm, hãy xử lý"
+            },
+            {
+              "claim": "Chiến dịch yêu cầu bảo đảm quy trình công bằng minh bạch cho hai game thủ Việt Nam",
+              "supported": true,
+              "evidence": "hình phạt cũng cần được đặt trong một khuôn khổ luật rõ ràng, quy trình minh bạch và nguyên tắc tương xứng"
+            },
+            {
+              "claim": "Lập luận hình phạt cần tương xứng",
+              "supported": true,
+              "evidence": "hình phạt cũng cần được đặt trong một khuôn khổ luật rõ ràng, quy trình minh bạch và nguyên tắc tương xứng"
+            },
+            {
+              "claim": "Lập luận hình phạt cần đặt trong khuôn khổ luật rõ ràng",
+              "supported": true,
+              "evidence": "hình phạt cũng cần được đặt trong một khuôn khổ luật rõ ràng, quy trình minh bạch và nguyên tắc tương xứng"
+            },
+            {
+              "claim": "Hai game thủ Việt Nam là Himass và TanVuu",
+              "supported": true,
+              "evidence": "Himass và TanVuu đã chấm dứt sự nghiệp PUBG PC của mình"
+            },
+            {
+              "claim": "Hai game thủ bị cấm vĩnh viễn khỏi PUBG: BATTLEGROUNDS và hệ thống giải đấu chính thức",
+              "supported": true,
+              "evidence": "KRAFTON công bố quyết định cấm vĩnh viễn Himass và TanVuu khỏi PUBG: BATTLEGROUNDS cũng như toàn bộ hệ thống giải đấu chính thức"
+            },
+            {
+              "claim": "Chiến dịch Justice for PUBG VN tập trung vào yêu cầu công bằng và minh bạch",
+              "supported": true,
+              "evidence": "thông điệp \"Justice for PUBG VN\" có thể được nhìn nhận như một yêu cầu rộng hơn... quy trình minh bạch"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Explains the demands of the Justice for PUBG VN campaign regarding fair treatment and transparent procedures."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": false,
+              "reason": "Describes the campaign's growth and bans but does not specify demands."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Mentions the number of supporters but does not detail the campaign's demands."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "Provides PUBG rules of conduct but does not relate directly to the campaign's demands."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Discusses the rationale for bans and rights to appeal, not the campaign's demands."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "Chiến dịch Justice for PUBG VN đòi hỏi nếu đã có sai phạm thì hãy xử lý",
+              "supported": true,
+              "evidence": "nếu đã có sai phạm, hãy xử lý"
+            },
+            {
+              "claim": "Hình phạt cần được đặt trong khuôn khổ luật rõ ràng, quy trình minh bạch và nguyên tắc tương xứng",
+              "supported": true,
+              "evidence": "hình phạt cũng cần được đặt trong một khuôn khổ luật rõ ràng, quy trình minh bạch và nguyên tắc tương xứng"
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "ANSWER directly states the demands of the Justice for PUBG VN campaign, including handling violations with clear laws, transparent procedures, and proportional principles."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.9744,
+        "answer_relevance": 0.8,
+        "context_recall": 0.8824,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q13",
+      "config": "A",
+      "question": "How should I report a player who is cheating or hacking in PUBG?",
+      "answer": "Bạn nên sử dụng hệ thống báo cáo trong trò chơi để báo cáo người chơi gian lận hoặc hack. Hệ thống này sẽ chuyển báo cáo ngay lập tức đến đội ngũ PUBG và bạn sẽ nhận được thông báo trong trò chơi nếu có hành động được thực hiện đối với người chơi bị nghi ngờ [1], [4]. Nếu không thể báo cáo qua hệ thống trong trò chơi, bạn có thể gửi thông tin bao gồm ngày xảy ra sự việc, tên nhân vật, loại vi phạm (ví dụ Aim Bot, Speed Hack), và đính kèm chi tiết như ảnh chụp màn hình hoặc video [2].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_report_cheating_bug_abuse_vi::chunk-0",
+        "pubg_report_cheating_bug_abuse_vi::chunk-1",
+        "pubg_report_cheat_seller_vi::chunk-0",
+        "pubg_report_cheating_bug_abuse_vi::chunk-2",
+        "pubg_account_cheating_responsibility_vi::chunk-0"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 0.6,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "The best option is the in-game report system.",
+              "supported": true,
+              "evidence": "The best option is to use the in-game report system to report any cheaters in the game."
+            },
+            {
+              "claim": "If the in-game report system is not used, send a Player Report Form.",
+              "supported": true,
+              "evidence": "For those cases, please let us know with the following information: [Player Report Form]"
+            },
+            {
+              "claim": "The Player Report Form includes the date of the issue.",
+              "supported": true,
+              "evidence": "Date of the issue:"
+            },
+            {
+              "claim": "The Player Report Form includes the character name.",
+              "supported": true,
+              "evidence": "Character Name:"
+            },
+            {
+              "claim": "The Player Report Form includes the violation type (Aim Bot, Speed Hack, etc.).",
+              "supported": true,
+              "evidence": "Violation type (Aim Bot, Speed Hack, etc.)"
+            },
+            {
+              "claim": "The Player Report Form includes attached details like screenshots or videos.",
+              "supported": true,
+              "evidence": "Attach details (screenshots, videos, etc.)"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Explains to use the in-game report system to report cheaters."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Provides details on reporting via a player report form with required information."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Focuses on reporting sites or users selling cheats, not direct player reporting."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": true,
+              "reason": "Emphasizes the in-game reporting system as the best option and mentions notification of action."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Discusses account security and bans, not how to report cheating players."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "You should use the in-game reporting system to report cheating or hacking players.",
+              "supported": true,
+              "evidence": "The best option is to use the in-game report system to report any cheaters in the game."
+            },
+            {
+              "claim": "The in-game reporting system forwards reports instantly to the PUBG team.",
+              "supported": true,
+              "evidence": "Our In-game reporting system is the best option to report these users, as it will be forwarded instantly to our team."
+            },
+            {
+              "claim": "You will receive an in-game notification if action is taken against the suspected player.",
+              "supported": true,
+              "evidence": "You will be notified in-game if there is any action taken against the suspected player."
+            },
+            {
+              "claim": "If you cannot report through the in-game system, you can send information including date, character name, violation type, and attach screenshots or videos.",
+              "supported": true,
+              "evidence": "For those cases, please let us know with the following information: Date of the issue, Character Name, Violation type (Aim Bot, Speed Hack, etc.), Attach details (screenshots, videos, etc.)"
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "The answer directly explains how to report a cheating player in PUBG using the in-game reporting system and alternative methods with detailed information."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.0641,
+        "answer_relevance": 0.0769,
+        "context_recall": 1.0,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q13",
+      "config": "B",
+      "question": "How should I report a player who is cheating or hacking in PUBG?",
+      "answer": "Bạn nên sử dụng hệ thống báo cáo trong trò chơi để báo cáo người chơi gian lận hoặc hack. Nếu không thể báo cáo qua hệ thống này, bạn có thể gửi thông tin chi tiết bao gồm ngày xảy ra sự việc, tên nhân vật, loại vi phạm (ví dụ: Aim Bot, Speed Hack), kèm theo bằng chứng như ảnh chụp màn hình hoặc video qua mẫu báo cáo người chơi. Sau khi báo cáo qua hệ thống trong game, bạn sẽ nhận được thông báo kết quả điều tra trong vòng 15 ngày [1], [2], [4], [5].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_report_cheating_bug_abuse_vi::chunk-0",
+        "pubg_report_cheating_bug_abuse_vi::chunk-1",
+        "pubg_report_cheat_seller_vi::chunk-0",
+        "pubg_report_cheating_bug_abuse_vi::chunk-2",
+        "pubg_report_cheating_bug_abuse_vi::chunk-3"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 0.8,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "The best option is the in-game report system.",
+              "supported": true,
+              "evidence": "The best option is to use the in-game report system to report any cheaters in the game."
+            },
+            {
+              "claim": "If not using the in-game report system, send a Player Report Form.",
+              "supported": true,
+              "evidence": "For those cases, please let us know with the following information: [Player Report Form]"
+            },
+            {
+              "claim": "The Player Report Form includes the date of the issue.",
+              "supported": true,
+              "evidence": "- Date of the issue:"
+            },
+            {
+              "claim": "The Player Report Form includes the character name.",
+              "supported": true,
+              "evidence": "- Character Name:"
+            },
+            {
+              "claim": "The Player Report Form includes the violation type (Aim Bot, Speed Hack, etc.).",
+              "supported": true,
+              "evidence": "- Violation type (Aim Bot, Speed Hack, etc.)"
+            },
+            {
+              "claim": "The Player Report Form includes attached details like screenshots or videos.",
+              "supported": true,
+              "evidence": "- Attach details (screenshots, videos, etc.)"
+            },
+            {
+              "claim": "The in-game report system forwards reports instantly to the team.",
+              "supported": true,
+              "evidence": "Our In-game reporting system is the best option to report these users, as it will be forwarded instantly to our team."
+            },
+            {
+              "claim": "You will be notified in-game if action is taken against the suspected player.",
+              "supported": true,
+              "evidence": "You will be notified in-game if there is any action taken against the suspected player."
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Explains to use the in-game report system to report cheaters."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Provides details on what information to include when reporting cheating/hacking."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Focuses on reporting sites or users selling cheats, not how to report a cheating player."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": true,
+              "reason": "Reinforces that the in-game reporting system is the best option and mentions notification of action taken."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": true,
+              "reason": "Gives additional reporting details and explains notification timeline after reporting."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "You should use the in-game reporting system to report players who cheat or hack.",
+              "supported": true,
+              "evidence": "The best option is to use the in-game report system to report any cheaters in the game."
+            },
+            {
+              "claim": "If you cannot report through the in-game system, you can send detailed information including the date of the incident, character name, type of violation (e.g., Aim Bot, Speed Hack), and evidence like screenshots or videos via a player report form.",
+              "supported": true,
+              "evidence": "For those cases, please let us know with the following information: Date of the issue, Character Name, Violation type (Aim Bot, Speed Hack, etc.), Attach details (screenshots, videos, etc.)"
+            },
+            {
+              "claim": "After reporting through the in-game system, you will receive a notification of the investigation result within 15 days.",
+              "supported": true,
+              "evidence": "If you have reported the player via the in-game reporting system, you will receive a notification about the result of the investigation within 15 days."
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "The answer directly explains how to report a cheating or hacking player in PUBG, including using the in-game reporting system and providing detailed evidence, fully addressing the question."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.0959,
+        "answer_relevance": 0.0,
+        "context_recall": 1.0,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q14",
+      "config": "A",
+      "question": "If someone else uses cheats on my PUBG account, will I get banned?",
+      "answer": "Nếu ai đó sử dụng cheat/hack trên tài khoản PUBG của bạn, tài khoản của bạn vẫn sẽ bị khóa vì vi phạm điều khoản dịch vụ, bất kể ai đã sử dụng cheat trên tài khoản đó. Việc bảo vệ tài khoản là trách nhiệm của bạn và PUBG không chịu trách nhiệm nếu người khác truy cập và lạm dụng tài khoản của bạn. Các lệnh cấm không thể được gỡ bỏ khi có bằng chứng vi phạm được xác định [1], [4].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_account_cheating_responsibility_vi::chunk-0",
+        "pubg_report_cheating_bug_abuse_vi::chunk-0",
+        "pubg_ban_penalty_information_vi::chunk-2",
+        "pubg_account_cheating_responsibility_vi::chunk-1",
+        "pubg_report_cheat_seller_vi::chunk-0"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 0.6,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Safeguarding the account is the owner's responsibility",
+              "supported": true,
+              "evidence": "Safeguarding your game account is your responsibility"
+            },
+            {
+              "claim": "PUBG is not liable if someone else misused the account",
+              "supported": true,
+              "evidence": "PUBG is not liable if someone else has access to your account and have misused the account"
+            },
+            {
+              "claim": "Do not share Steam credentials",
+              "supported": true,
+              "evidence": "Please do not share your Steam credentials to anyone"
+            },
+            {
+              "claim": "Regardless of who cheated, the game account is restricted",
+              "supported": true,
+              "evidence": "regardless of who had cheated or violated the terms and services on the account, the game account will be the one that is restricted"
+            },
+            {
+              "claim": "Bans cannot be reversed once a violation is evidenced",
+              "supported": true,
+              "evidence": "Bans on accounts cannot be reversed once evidence of a violation is determined"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Directly addresses if account owner gets banned when someone else cheats on their account."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": false,
+              "reason": "Explains how to report cheaters, not about account bans for others cheating on your account."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": true,
+              "reason": "Mentions permanent ban for usage of another user's account, relevant to account misuse."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": true,
+              "reason": "States that bans apply to the account regardless of who cheated, and bans are irreversible."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Discusses reporting cheat vendors, not about account bans for others cheating on your account."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "If someone uses cheat/hack on your PUBG account, your account will still be banned for violating terms of service.",
+              "supported": true,
+              "evidence": "Therefore, regardless of who had cheated or violated the terms and services on the account, the game account will be the one that is restricted."
+            },
+            {
+              "claim": "Protecting your account is your responsibility and PUBG is not liable if others access and misuse your account.",
+              "supported": true,
+              "evidence": "Safeguarding your game account is your responsibility and PUBG is not liable if someone else has access to your account and have misused the account."
+            },
+            {
+              "claim": "Bans cannot be removed once evidence of violation is determined.",
+              "supported": true,
+              "evidence": "Bans on accounts cannot be reversed once evidence of a violation is determined."
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "The answer clearly states that the account will be banned regardless of who uses cheats, directly addressing the question completely."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.0182,
+        "answer_relevance": 0.0769,
+        "context_recall": 1.0,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q14",
+      "config": "B",
+      "question": "If someone else uses cheats on my PUBG account, will I get banned?",
+      "answer": "Nếu ai đó khác sử dụng cheat/hack trên tài khoản PUBG của bạn, tài khoản đó vẫn sẽ bị cấm dù người vi phạm là ai. Việc bảo vệ tài khoản là trách nhiệm của bạn và PUBG không chịu trách nhiệm nếu ai đó truy cập và lạm dụng tài khoản của bạn. Các lệnh cấm không thể được gỡ bỏ khi có bằng chứng vi phạm được xác định [1], [2].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_account_cheating_responsibility_vi::chunk-0",
+        "pubg_account_cheating_responsibility_vi::chunk-1",
+        "pubg_report_cheat_seller_vi::chunk-0",
+        "pubg_report_cheating_bug_abuse_vi::chunk-0",
+        "pubg_ban_penalty_information_vi::chunk-0"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 0.4,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Safeguarding the account is the owner's responsibility",
+              "supported": true,
+              "evidence": "Safeguarding your game account is your responsibility and PUBG is not liable if someone else has access to your account and have misused the account."
+            },
+            {
+              "claim": "Regardless of who cheated, the game account is restricted",
+              "supported": true,
+              "evidence": "Therefore, regardless of who had cheated or violated the terms and services on the account, the game account will be the one that is restricted."
+            },
+            {
+              "claim": "Bans cannot be reversed once a violation is evidenced",
+              "supported": true,
+              "evidence": "Bans on accounts cannot be reversed once evidence of a violation is determined."
+            },
+            {
+              "claim": "Do not share Steam credentials",
+              "supported": true,
+              "evidence": "Please do not share your Steam credentials to anyone."
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Directly addresses if account owner will be banned if someone else cheats on their account."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Explains that bans apply to the account regardless of who cheated and that bans are irreversible."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Discusses reporting cheat vendors, not about account bans due to others cheating."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "Explains how to report cheaters, not about account bans for others cheating on your account."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "General info about bans and penalties, no specific mention of others cheating on your account."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "If someone else uses cheat/hack on your PUBG account, the account will still be banned regardless of who violated.",
+              "supported": true,
+              "evidence": "Therefore, regardless of who had cheated or violated the terms and services on the account, the game account will be the one that is restricted."
+            },
+            {
+              "claim": "Protecting your account is your responsibility and PUBG is not responsible if someone else accesses and abuses your account.",
+              "supported": true,
+              "evidence": "Safeguarding your game account is your responsibility and PUBG is not liable if someone else has access to your account and have misused the account."
+            },
+            {
+              "claim": "Bans cannot be removed once evidence of violation is determined.",
+              "supported": true,
+              "evidence": "Bans on accounts cannot be reversed once evidence of a violation is determined."
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "The answer clearly states that the account will be banned regardless of who uses cheats, directly addressing the question completely."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.0208,
+        "answer_relevance": 0.0769,
+        "context_recall": 1.0,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q15",
+      "config": "A",
+      "question": "How do I report a website or user selling cheats and hacks?",
+      "answer": "Bạn có thể báo cáo trang web hoặc người dùng bán cheat/hack bằng cách gửi email đến đội hỗ trợ PUBG với các thông tin sau: \n- Link trang web bán cheat/hack \n- Loại chương trình bất hợp pháp đang được bán \n- Nếu có, cung cấp ảnh chụp màn hình hoặc video liên quan \nĐội ngũ PUBG sẽ kiểm tra và xử lý các trang web hoặc người dùng vi phạm [2].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_report_cheat_seller_vi::chunk-0",
+        "pubg_report_cheat_seller_vi::chunk-1",
+        "pubg_report_cheating_bug_abuse_vi::chunk-0",
+        "pubg_report_cheating_bug_abuse_vi::chunk-2",
+        "pubg_report_cheating_bug_abuse_vi::chunk-1"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 0.4,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Email the support team with the link of the site selling hacks/cheats",
+              "supported": true,
+              "evidence": "Link of the site that is selling hacks/cheats"
+            },
+            {
+              "claim": "Email the support team with the types of illegal programs sold",
+              "supported": true,
+              "evidence": "Types of illegal programs that are being sold"
+            },
+            {
+              "claim": "Email the support team with any related screenshots or video",
+              "supported": true,
+              "evidence": "If any related screenshots/video can be provided"
+            },
+            {
+              "claim": "The team will check and process the illegal sites and users",
+              "supported": true,
+              "evidence": "We will have our team check and process the illegal sites and/or users"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Describes awareness of vendors selling cheats and efforts to block them, relevant to reporting."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Provides explicit instructions on how to report websites selling cheats/hacks via email with required information."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": false,
+              "reason": "Focuses on reporting players cheating in-game, not websites or users selling cheats."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "Discusses in-game reporting system for cheaters, not reporting websites or sellers of cheats."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Details reporting players abusing bugs, unrelated to reporting websites or users selling cheats."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "Bạn có thể báo cáo trang web hoặc người dùng bán cheat/hack bằng cách gửi email đến đội hỗ trợ PUBG với các thông tin sau",
+              "supported": true,
+              "evidence": "If you come across websites containing cheats, hacks, and scams for our games, you can help us by raising an email to our support team with the following information"
+            },
+            {
+              "claim": "Thông tin cần gửi bao gồm link trang web bán cheat/hack",
+              "supported": true,
+              "evidence": "- Link of the site that is selling hacks/cheats:"
+            },
+            {
+              "claim": "Thông tin cần gửi bao gồm loại chương trình bất hợp pháp đang được bán",
+              "supported": true,
+              "evidence": "- Types of illegal programs that are being sold:"
+            },
+            {
+              "claim": "Nếu có, cần cung cấp ảnh chụp màn hình hoặc video liên quan",
+              "supported": true,
+              "evidence": "- If any related screenshots/video can be provided:"
+            },
+            {
+              "claim": "Đội ngũ PUBG sẽ kiểm tra và xử lý các trang web hoặc người dùng vi phạm",
+              "supported": true,
+              "evidence": "We will have our team check and process the illegal sites and/or users."
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "The answer directly explains how to report a website or user selling cheats/hacks, including the necessary information to provide and the process."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.1071,
+        "answer_relevance": 0.0,
+        "context_recall": 0.963,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q15",
+      "config": "B",
+      "question": "How do I report a website or user selling cheats and hacks?",
+      "answer": "Bạn có thể báo cáo trang web hoặc người dùng bán cheat/hack qua hệ thống báo cáo trong game hoặc liên hệ với đội ngũ hỗ trợ của PUBG. PUBG đang nỗ lực chặn các người dùng, trang web, cheat và cải thiện hệ thống phát hiện vi phạm này [1].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_report_cheat_seller_vi::chunk-0",
+        "pubg_report_cheating_bug_abuse_vi::chunk-0",
+        "pubg_report_cheating_bug_abuse_vi::chunk-1",
+        "pubg_report_cheating_bug_abuse_vi::chunk-2",
+        "pubg_report_cheating_bug_abuse_vi::chunk-3"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 1.0,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Email the support team with the link of the site selling hacks/cheats.",
+              "supported": true,
+              "evidence": "You can also reach out to our support team with the following details: - Type of Violation (Aimbot, ESP, Wallhack, etc.)"
+            },
+            {
+              "claim": "Email the support team with the types of illegal programs sold.",
+              "supported": true,
+              "evidence": "You can also reach out to our support team with the following details: - Type of Violation (Aimbot, ESP, Wallhack, etc.)"
+            },
+            {
+              "claim": "Email the support team with any related screenshots or video.",
+              "supported": true,
+              "evidence": "A video of the issue as an email attachment (not exceeding 20 MB) or a video link describing the same"
+            },
+            {
+              "claim": "The support team will check and process the illegal sites and users.",
+              "supported": true,
+              "evidence": "Our team is working on blocking out those users, websites, cheats etc. and improving our systems to detect these infractions."
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Discusses reporting sites or users selling cheats/hacks and mentions efforts to block them."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Explains how to report cheating/hacking using the in-game report system."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": true,
+              "reason": "Provides details on information needed to report a player abusing cheats or bugs."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": true,
+              "reason": "Emphasizes using the in-game reporting system and provides a link for more info."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": true,
+              "reason": "Gives additional reporting details and instructions for contacting support with evidence."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "You can report websites or users selling cheats/hacks via the in-game reporting system.",
+              "supported": true,
+              "evidence": "The best option is to use the in-game report system to report any cheaters in the game."
+            },
+            {
+              "claim": "You can also contact the PUBG support team to report cheats/hacks.",
+              "supported": true,
+              "evidence": "You can also reach out to our support team with the following details..."
+            },
+            {
+              "claim": "PUBG is working to block users, websites, and cheats and improve detection systems.",
+              "supported": true,
+              "evidence": "Our team is working on blocking out those users, websites, cheats etc. and improving our systems to detect these infractions."
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "The answer directly explains how to report websites or users selling cheats/hacks through the in-game reporting system or PUBG support team."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.1,
+        "answer_relevance": 0.0,
+        "context_recall": 0.6667,
+        "context_precision": 1.0
+      }
+    },
+    {
+      "id": "q16",
+      "config": "A",
+      "question": "Which PUBG violations lead to a 30-day ban versus a permanent ban?",
+      "answer": "Các vi phạm dẫn đến án cấm 30 ngày gồm có: Sử dụng ngôn ngữ không phù hợp, sử dụng tên không phù hợp, gây cản trở gameplay, chơi game bất thường [1], [2], [3].\n\nCác vi phạm dẫn đến án cấm vĩnh viễn gồm có: Sử dụng, phát triển, quảng cáo, giao dịch hoặc phân phối chương trình và thiết bị không được phép; sửa đổi client, server và dữ liệu game; khai thác lỗi nghiêm trọng; quảng cáo; giết đồng đội; chơi theo nhóm; theo dõi; công bố thông tin cá nhân; thao túng kết quả trận đấu; sử dụng tài khoản người khác; AFK; quấy rối hoạt động kinh doanh; giao dịch tiền mặt; và các hành vi khác gây ảnh hưởng nghiêm trọng đến trải nghiệm và an toàn game [1], [2], [3].",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_ban_penalty_information_vi::chunk-1",
+        "pubg_ban_penalty_information_vi::chunk-2",
+        "pubg_ban_penalty_information_vi::chunk-3",
+        "pubg_ban_penalty_information_vi::chunk-0",
+        "pubg_asia_stars_himass_tanvuu_investigation_vi::chunk-11"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 0.875,
+      "context_precision": 0.6,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Use of inappropriate language leads to at most a 30-day ban",
+              "supported": true,
+              "evidence": "Use of Inappropriate Language | 30-day Ban"
+            },
+            {
+              "claim": "Use of inappropriate names leads to at most a 30-day ban",
+              "supported": true,
+              "evidence": "Use of Inappropriate Names | 30-day Ban"
+            },
+            {
+              "claim": "Use of unauthorized programs leads to permanent bans",
+              "supported": true,
+              "evidence": "Use, develop, advertise, trade or distribute Unauthorized Programs and Hardware Devices | Permanent Ban"
+            },
+            {
+              "claim": "Bug exploits lead to permanent bans",
+              "supported": true,
+              "evidence": "Exploiting Bugs and Glitches(Major) | Permanent Ban"
+            },
+            {
+              "claim": "Teamkilling leads to permanent bans",
+              "supported": true,
+              "evidence": "Teamkilling | Permanent Ban"
+            },
+            {
+              "claim": "Teaming leads to permanent bans",
+              "supported": true,
+              "evidence": "Teaming | Permanent Ban"
+            },
+            {
+              "claim": "Stalking leads to permanent bans",
+              "supported": true,
+              "evidence": "Stalking | Permanent Ban"
+            },
+            {
+              "claim": "Restrictions cannot be lifted or reduced even after contacting support",
+              "supported": false,
+              "evidence": "none"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Lists specific violations and their penalty durations including 30-day and permanent bans."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Provides additional violations with corresponding 30-day and permanent bans."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": true,
+              "reason": "Includes more violations and their penalty periods, including 30-day and permanent bans."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "General introduction about bans without specific violation details."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Mentions policy sections in Vietnamese but does not specify ban durations or violations clearly."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "Sử dụng ngôn ngữ không phù hợp dẫn đến án cấm 30 ngày",
+              "supported": true,
+              "evidence": "Use of Inappropriate Language | 30-day Ban"
+            },
+            {
+              "claim": "Sử dụng tên không phù hợp dẫn đến án cấm 30 ngày",
+              "supported": true,
+              "evidence": "Use of Inappropriate Names | 30-day Ban"
+            },
+            {
+              "claim": "Gây cản trở gameplay dẫn đến án cấm 30 ngày",
+              "supported": true,
+              "evidence": "Gameplay Interference | 30-day Ban"
+            },
+            {
+              "claim": "Chơi game bất thường dẫn đến án cấm 30 ngày",
+              "supported": true,
+              "evidence": "Abnormal Gameplay | 30-day Ban"
+            },
+            {
+              "claim": "Sử dụng chương trình và thiết bị không được phép dẫn đến án cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Use, develop, advertise, trade or distribute Unauthorized Programs and Hardware Devices | Permanent Ban"
+            },
+            {
+              "claim": "Sửa đổi client, server và dữ liệu game dẫn đến án cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Modification of Game Client, Servers and Game Data (packet, etc.) | Permanent Ban"
+            },
+            {
+              "claim": "Khai thác lỗi nghiêm trọng dẫn đến án cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Exploiting Bugs and Glitches(Major) | Permanent Ban"
+            },
+            {
+              "claim": "Quảng cáo dẫn đến án cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Promotion or Advertising | Permanent Ban"
+            },
+            {
+              "claim": "Giết đồng đội dẫn đến án cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Teamkilling | Permanent Ban"
+            },
+            {
+              "claim": "Chơi theo nhóm dẫn đến án cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Teaming | Permanent Ban"
+            },
+            {
+              "claim": "Theo dõi dẫn đến án cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Stalking | Permanent Ban"
+            },
+            {
+              "claim": "Công bố thông tin cá nhân dẫn đến án cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Publishing Personal Information | Permanent Ban"
+            },
+            {
+              "claim": "Thao túng kết quả trận đấu dẫn đến án cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Manipulating Match Results | Permanent Ban"
+            },
+            {
+              "claim": "Sử dụng tài khoản người khác dẫn đến án cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Usage of Another User's Account | Permanent Ban"
+            },
+            {
+              "claim": "AFK dẫn đến án cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "AFK | Permanent Ban"
+            },
+            {
+              "claim": "Quấy rối hoạt động kinh doanh dẫn đến án cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Disturbing Business Operations | Permanent Ban"
+            },
+            {
+              "claim": "Giao dịch tiền mặt dẫn đến án cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Attempting Cash Transactions | Permanent Ban"
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "The answer clearly lists violations that lead to 30-day bans and those that lead to permanent bans, directly addressing the question completely."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.2165,
+        "answer_relevance": 0.0909,
+        "context_recall": 0.75,
+        "context_precision": 0.6
+      }
+    },
+    {
+      "id": "q16",
+      "config": "B",
+      "question": "Which PUBG violations lead to a 30-day ban versus a permanent ban?",
+      "answer": "Các vi phạm dẫn đến cấm 30 ngày gồm:\n- Sử dụng tên không phù hợp\n- Can thiệp vào lối chơi\n- Sử dụng ngôn ngữ không phù hợp\n- Lối chơi bất thường\n\nCác vi phạm dẫn đến cấm vĩnh viễn gồm:\n- Quảng cáo hoặc khuyến mãi\n- Giết đồng đội\n- Hợp tác trái phép (teaming)\n- Theo dõi (stalking)\n- Công bố thông tin cá nhân\n- Thao túng kết quả trận đấu\n- Sử dụng tài khoản của người khác\n- AFK\n- Sử dụng, phát triển, quảng cáo, giao dịch hoặc phân phối phần mềm/hardware trái phép\n- Sửa đổi client, server, dữ liệu game\n- Lợi dụng lỗi lớn (bug, glitch)\n- Gây rối hoạt động kinh doanh (lan truyền thông tin sai, giả mạo nhân viên, tạo tin đồn)\n- Giao dịch tiền mặt trái phép\n\n[1], [2], [3]",
+      "refused": false,
+      "chunk_ids": [
+        "pubg_ban_penalty_information_vi::chunk-2",
+        "pubg_ban_penalty_information_vi::chunk-1",
+        "pubg_ban_penalty_information_vi::chunk-3",
+        "pubg_ban_penalty_information_vi::chunk-0",
+        "pubg_report_cheating_bug_abuse_vi::chunk-3"
+      ],
+      "faithfulness": 1.0,
+      "answer_relevance": 1.0,
+      "context_recall": 1.0,
+      "context_precision": 0.6,
+      "judge_failed": false,
+      "judge": {
+        "context_recall": {
+          "claims": [
+            {
+              "claim": "Use of inappropriate language leads to at most a 30-day ban",
+              "supported": true,
+              "evidence": "Use of Inappropriate Language — 30-day Ban"
+            },
+            {
+              "claim": "Use of inappropriate names leads to at most a 30-day ban",
+              "supported": true,
+              "evidence": "Use of Inappropriate Names | 30-day Ban"
+            },
+            {
+              "claim": "Use of unauthorized programs leads to permanent bans",
+              "supported": true,
+              "evidence": "Use, develop, advertise, trade or distribute Unauthorized Programs and Hardware Devices | Permanent Ban"
+            },
+            {
+              "claim": "Bug exploits lead to permanent bans",
+              "supported": true,
+              "evidence": "Exploiting Bugs and Glitches(Major) | Permanent Ban"
+            },
+            {
+              "claim": "Teamkilling leads to permanent bans",
+              "supported": true,
+              "evidence": "Teamkilling | Permanent Ban"
+            },
+            {
+              "claim": "Teaming leads to permanent bans",
+              "supported": true,
+              "evidence": "Teaming | Permanent Ban"
+            },
+            {
+              "claim": "Stalking leads to permanent bans",
+              "supported": true,
+              "evidence": "Stalking | Permanent Ban"
+            },
+            {
+              "claim": "Restrictions cannot be lifted or reduced even after contacting support",
+              "supported": true,
+              "evidence": "Restrictions cannot be lifted and periods cannot be reduced"
+            }
+          ]
+        },
+        "context_precision": {
+          "chunks": [
+            {
+              "chunk_index": 1,
+              "relevant": true,
+              "reason": "Lists specific PUBG violations and their corresponding 30-day or permanent bans."
+            },
+            {
+              "chunk_index": 2,
+              "relevant": true,
+              "reason": "Details misconduct types with maximum penalty periods including 30-day and permanent bans."
+            },
+            {
+              "chunk_index": 3,
+              "relevant": true,
+              "reason": "Provides additional violations and their ban durations, including 30-day and permanent bans."
+            },
+            {
+              "chunk_index": 4,
+              "relevant": false,
+              "reason": "General information about bans without specific violation-to-penalty mapping."
+            },
+            {
+              "chunk_index": 5,
+              "relevant": false,
+              "reason": "Instructions for reporting players, no details on ban durations or violations."
+            }
+          ]
+        },
+        "faithfulness": {
+          "claims": [
+            {
+              "claim": "Sử dụng tên không phù hợp dẫn đến cấm 30 ngày",
+              "supported": true,
+              "evidence": "Use of Inappropriate Names | 30-day Ban"
+            },
+            {
+              "claim": "Can thiệp vào lối chơi dẫn đến cấm 30 ngày",
+              "supported": true,
+              "evidence": "Gameplay Interference | 30-day Ban"
+            },
+            {
+              "claim": "Sử dụng ngôn ngữ không phù hợp dẫn đến cấm 30 ngày",
+              "supported": true,
+              "evidence": "Use of Inappropriate Language | 30-day Ban"
+            },
+            {
+              "claim": "Lối chơi bất thường dẫn đến cấm 30 ngày",
+              "supported": true,
+              "evidence": "Abnormal Gameplay | 30-day Ban"
+            },
+            {
+              "claim": "Quảng cáo hoặc khuyến mãi dẫn đến cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Promotion or Advertising | Permanent Ban"
+            },
+            {
+              "claim": "Giết đồng đội dẫn đến cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Teamkilling | Permanent Ban"
+            },
+            {
+              "claim": "Hợp tác trái phép (teaming) dẫn đến cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Teaming | Permanent Ban"
+            },
+            {
+              "claim": "Theo dõi (stalking) dẫn đến cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Stalking | Permanent Ban"
+            },
+            {
+              "claim": "Công bố thông tin cá nhân dẫn đến cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Publishing Personal Information | Permanent Ban"
+            },
+            {
+              "claim": "Thao túng kết quả trận đấu dẫn đến cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Manipulating Match Results | Permanent Ban"
+            },
+            {
+              "claim": "Sử dụng tài khoản của người khác dẫn đến cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Usage of Another User's Account | Permanent Ban"
+            },
+            {
+              "claim": "AFK dẫn đến cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "AFK | Permanent Ban"
+            },
+            {
+              "claim": "Sử dụng, phát triển, quảng cáo, giao dịch hoặc phân phối phần mềm/hardware trái phép dẫn đến cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Use, develop, advertise, trade or distribute Unauthorized Programs and Hardware Devices | Permanent Ban"
+            },
+            {
+              "claim": "Sửa đổi client, server, dữ liệu game dẫn đến cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Modification of Game Client, Servers and Game Data | Permanent Ban"
+            },
+            {
+              "claim": "Lợi dụng lỗi lớn (bug, glitch) dẫn đến cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Exploiting Bugs and Glitches(Major) | Permanent Ban"
+            },
+            {
+              "claim": "Gây rối hoạt động kinh doanh (lan truyền thông tin sai, giả mạo nhân viên, tạo tin đồn) dẫn đến cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Disturbing Business Operations (e.g. spread false information, abuse customer service platform, impersonate oneself as an employee, create and spread rumors) | Permanent Ban"
+            },
+            {
+              "claim": "Giao dịch tiền mặt trái phép dẫn đến cấm vĩnh viễn",
+              "supported": true,
+              "evidence": "Attempting Cash Transactions | Permanent Ban"
+            }
+          ]
+        },
+        "answer_relevance": {
+          "score": 1.0,
+          "reason": "The answer clearly lists violations leading to 30-day bans and those leading to permanent bans, directly addressing the question."
+        }
+      },
+      "diagnostics": {
+        "faithfulness": 0.0909,
+        "answer_relevance": 0.0909,
+        "context_recall": 0.7857,
+        "context_precision": 0.8
+      }
+    }
+  ]
+}

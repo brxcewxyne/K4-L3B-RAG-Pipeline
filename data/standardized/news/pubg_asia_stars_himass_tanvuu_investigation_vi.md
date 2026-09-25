@@ -8,7 +8,7 @@ language: "vi"
 doc_type: "news"
 source_type: "official_news"
 authority_level: "primary"
-source_file: "data/landing/web/pubg_asia_stars_himass_tanvuu_investigation_vi.json"
+source_file: "data/landing/news/pubg_asia_stars_himass_tanvuu_investigation_vi.json"
 date_crawled: "2026-09-25"
 topic:
   - "pubg_asia_stars"

@@ -340,3 +340,48 @@ def selected_context_html(items: list[dict]) -> str:
             "CONTEXT — chunks sẽ gửi cho LLM (Top-K)</div>"
             + "".join(rows) + "</div>" if rows else
             "<div class='flow-empty'>Chưa có context được chọn.</div>")
+
+
+def fallback_panel_html(fallback: dict | None,
+                        pageindex_results: list[dict] | None) -> str:
+    """Panel PageIndex fallback — downstream của RRF, KHÔNG phải nhánh song song.
+
+    Hiển thị: có trigger hay không, lý do, dense score, ngưỡng, tài liệu
+    truy xuất kèm page/section (nếu provider trả về) và preview nội dung.
+    """
+    fallback = fallback or {}
+    if not fallback.get("triggered"):
+        return ("<div class='flow-panel'><div class='flow-panel-head'>"
+                "PAGEINDEX FALLBACK — không kích hoạt "
+                "(hybrid confidence đủ mạnh)</div></div>")
+    reason = str(fallback.get("reason", "—"))
+    best = fallback.get("best_dense_score")
+    try:
+        best_text = f"{float(best):.4f}" if best is not None else "—"
+    except (TypeError, ValueError):
+        best_text = str(best)
+    try:
+        threshold_text = f"{float(fallback.get('threshold', 0)):.2f}"
+    except (TypeError, ValueError):
+        threshold_text = str(fallback.get("threshold", "—"))
+    rows = []
+    for rank, item in enumerate(pageindex_results or [], 1):
+        where = " · ".join(str(item.get(k)) for k in ("page", "section")
+                           if item.get(k) is not None)
+        preview = html.escape(str(item.get("preview", "")))
+        extra = (f"<details class='flow-preview'><summary>Xem nội dung</summary>"
+                 f"<div>{preview}</div></details>" if preview else "")
+        rows.append(_flow_row(
+            rank, str(item.get("title", "—")),
+            str(item.get("chunk_id", "—")),
+            "<span class='flow-score-chip'>PageIndex vectorless "
+            "(tree navigation)</span>",
+            html.escape(where or str(item.get("source", "—"))), extra))
+    return ("<div class='flow-panel'><div class='flow-panel-head'>"
+            "PAGEINDEX FALLBACK — hybrid confidence quá thấp</div>"
+            f"<div class='flow-meta'>reason: {html.escape(reason)} · "
+            f"best dense cosine: <b>{best_text}</b> · "
+            f"threshold: <b>{threshold_text}</b></div>"
+            + "".join(rows) + "</div>" if rows else
+            "<div class='flow-panel'><div class='flow-panel-head'>"
+            "PAGEINDEX FALLBACK — không có bằng chứng bổ sung</div></div>")

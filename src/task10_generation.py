@@ -36,6 +36,7 @@ def reorder_for_llm(chunks: list[dict]) -> list[dict]:
 def format_context(chunks: list[dict]) -> str:
     return "\n\n".join(
         f"[{index}]\n" + json.dumps({
+            "source": chunk["metadata"].get("source"),
             "title": chunk["metadata"].get("title"),
             "publisher": chunk["metadata"].get("publisher"),
             "source_type": chunk["metadata"].get("source_type"),
@@ -78,6 +79,8 @@ def generate_with_citation(query: str, top_k: int = TOP_K) -> dict:
     chunks = reorder_for_llm(result["chunks"])
     answer = INSUFFICIENT_EVIDENCE
     sources = []
+    # retrieval_source do Task 9 quyết định (hybrid/pageindex); rỗng -> none.
+    retrieval_source = result.get("retrieval_source") or "hybrid"
     if chunks:
         answer = call_llm(SYSTEM_PROMPT,
                           f"CONTEXT:\n{format_context(chunks)}\n\nUSER:\n{query}")
@@ -91,6 +94,7 @@ def generate_with_citation(query: str, top_k: int = TOP_K) -> dict:
             sources = [{**chunk, "citation_id": index}
                        for index, chunk in enumerate(chunks, 1)]
     return {"answer": answer, "sources": sources,
-            "retrieval_source": "hybrid" if sources else "none",
-            "retrieval_method": "hybrid", "is_mock": False,
+            "retrieval_source": retrieval_source if sources else "none",
+            "retrieval_method": retrieval_source if sources else "none",
+            "is_mock": False,
             "backend_connected": True, "retrieval_trace": result["retrieval_trace"]}

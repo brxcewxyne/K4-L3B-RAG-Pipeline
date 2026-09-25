@@ -31,7 +31,7 @@
   },
   {
     "title": "Thông Báo Kết Quả Điều Tra Và Biện Pháp Xử Lý Sự Cố Vận Hành PUBG Asia Stars",
-    "local_path": "data/landing/web/pubg_asia_stars_himass_tanvuu_investigation_vi.json",
+    "local_path": "data/landing/news/pubg_asia_stars_himass_tanvuu_investigation_vi.json",
     "url": "https://www.pubg.com/vi/news/11155",
     "publisher": "PUBG / KRAFTON",
     "language": "vi",
@@ -41,7 +41,7 @@
   },
   {
     "title": "Hơn 4,1 triệu chữ ký yêu cầu đòi lại công bằng cho Himass và TanVuu",
-    "local_path": "data/landing/web/justice_for_himass_tanvuu_vi.json",
+    "local_path": "data/landing/news/justice_for_himass_tanvuu_vi.json",
     "url": "https://vnexpress.net/hon-4-1-trieu-chu-ky-yeu-cau-doi-lai-cong-bang-cho-himass-va-tanvuu-5124532.html",
     "publisher": "VnExpress",
     "language": "vi",
@@ -51,7 +51,7 @@
   },
   {
     "title": "How to report cheating/hacking and bug abuse — PUBG Support",
-    "local_path": "data/landing/web/pubg_report_cheating_bug_abuse_vi.json",
+    "local_path": "data/landing/news/pubg_report_cheating_bug_abuse_vi.json",
     "url": "https://support.pubg.com/hc/en-us/articles/360044488434-I-found-a-player-who-is-cheating-hacking-How-should-I-report-it",
     "publisher": "PUBG Support",
     "language": "en",
@@ -61,7 +61,7 @@
   },
   {
     "title": "If someone else uses cheats/hacks on my account, will I get banned? Can it be removed? — PUBG Support",
-    "local_path": "data/landing/web/pubg_account_cheating_responsibility_vi.json",
+    "local_path": "data/landing/news/pubg_account_cheating_responsibility_vi.json",
     "url": "https://support.pubg.com/hc/en-us/articles/360002085694-If-someone-else-uses-cheats-hacks-on-my-account-will-I-get-banned-Can-it-be-removed",
     "publisher": "PUBG Support",
     "language": "en",
@@ -71,7 +71,7 @@
   },
   {
     "title": "I want to report a site or user who is selling cheats/hacks — PUBG Support",
-    "local_path": "data/landing/web/pubg_report_cheat_seller_vi.json",
+    "local_path": "data/landing/news/pubg_report_cheat_seller_vi.json",
     "url": "https://support.pubg.com/hc/en-us/articles/115004167334-I-want-to-report-a-site-or-user-who-is-selling-cheats-hacks",
     "publisher": "PUBG Support",
     "language": "en",
@@ -81,7 +81,7 @@
   },
   {
     "title": "I want to know more about bans — PUBG Support",
-    "local_path": "data/landing/web/pubg_ban_penalty_information_vi.json",
+    "local_path": "data/landing/news/pubg_ban_penalty_information_vi.json",
     "url": "https://support.pubg.com/hc/en-us/articles/8463403858329-I-want-to-know-more-about-bans",
     "publisher": "PUBG Support",
     "language": "en",

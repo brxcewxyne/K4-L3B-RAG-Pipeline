@@ -8,7 +8,7 @@ language: "vi"
 doc_type: "news"
 source_type: "independent"
 authority_level: "secondary"
-source_file: "data/landing/web/justice_for_himass_tanvuu_vi.json"
+source_file: "data/landing/news/justice_for_himass_tanvuu_vi.json"
 date_crawled: "2026-09-25"
 topic:
   - "justice_for_pubg_vn"
