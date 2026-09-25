@@ -164,7 +164,8 @@ def assistant_message_html(    answer_markdown: str,
     """
     _ = answer_markdown  # answer itself is rendered via st.markdown
     cards = "".join(
-        source_card_html(i + 1, s) for i, s in enumerate(sources or [])
+        source_card_html(s.get("citation_id", i + 1), s)
+        for i, s in enumerate(sources or [])
     )
     sources_block = (
         f"<div class='src-list'><div class='src-heading'>Sources</div>{cards}</div>"

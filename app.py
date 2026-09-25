@@ -4,13 +4,12 @@
 STRICTLY UI ONLY. No retrieval, embeddings, BM25, RRF, LLM calls,
 evaluation, or backend RAG logic lives here.
 
-Future backend connection point (single place)::
+Backend connection point::
 
     from src.ui_backend import ask_question  # -> handle_query
-    answer = ask_question(user_query)        # TODO: wire to RAG later
+    answer = ask_question(user_query)
 
-Replacing ``src/ui_backend.ask_question`` with a call to
-``src.task10_generation.generate_with_citation`` requires no page redesign.
+``src.ui_backend`` connects shared retrieval and context-only generation.
 
 Run::
 
@@ -19,7 +18,6 @@ Run::
 
 from __future__ import annotations
 
-import time
 from pathlib import Path
 
 import streamlit as st
@@ -284,17 +282,30 @@ def _process_query(raw_query: str) -> None:
         return
     st.session_state.is_loading = True
     st.session_state.messages.append({"role": "user", "content": query})
-    with st.spinner("Đang chuẩn bị câu trả lời (UI preview — chưa retrieval thật)…"):
-        time.sleep(0.6)  # demo loading state only
-        # === FUTURE HOOK: answer = ask_question(user_query) ===
-        result = handle_query(query, top_k=int(st.session_state.top_k))
+    try:
+        with st.spinner("Đang truy xuất tài liệu và tạo câu trả lời…"):
+            result = handle_query(query, top_k=int(st.session_state.top_k))
+    except Exception as exc:
+        from src.task10_generation import GenerationError
+        message = (str(exc) if isinstance(exc, GenerationError) else
+                   "Không thể truy xuất tài liệu. Kiểm tra kết nối embedding API và ChromaDB rồi thử lại.")
+        st.session_state.messages.append({"role": "assistant", "content": message,
+                                          "error": True, "is_mock": False})
+        return
+    finally:
+        st.session_state.is_loading = False
+    st.session_state.flow_query = query
+    st.session_state.flow_trace = result["retrieval_trace"]
+    st.session_state.flow_trace_key = (query, int(st.session_state.top_k))
+    st.session_state.flow_query_input = query
     st.session_state.messages.append(
         {
             "role": "assistant",
             "content": result.get("answer", ""),
             "sources": result.get("sources", []),
-            "retrieval_method": result.get("retrieval_method", "hybrid (demo)"),
-            "is_mock": bool(result.get("is_mock", True)),
+            "retrieval_method": result.get("retrieval_method", "hybrid"),
+            "is_mock": False,
+            "retrieval_trace": result["retrieval_trace"],
         }
     )
     st.session_state.is_loading = False
@@ -307,9 +318,9 @@ def _process_query(raw_query: str) -> None:
 def _render_flow_tab() -> None:
     st.markdown(flow_diagram_html(), unsafe_allow_html=True)
 
+    st.session_state.setdefault("flow_query_input", st.session_state.flow_query)
     query = st.text_input(
         "Câu hỏi truy xuất Dense / BM25 / RRF",
-        value=st.session_state.flow_query,
         max_chars=500,
         key="flow_query_input",
     )
@@ -391,7 +402,7 @@ st.markdown(
     <p class="pubg-sub">Quy tắc · Án phạt · Hỗ trợ · Vụ việc</p>
   </div>
   <div class="pubg-badges">
-    <span class="badge badge-preview">Chat Preview · Live Retrieval</span>
+    <span class="badge badge-preview">Live RAG</span>
   </div>
 </div>
 """,
@@ -486,8 +497,7 @@ with chat_tab:
                     ):
                         pending_example = prompt
             st.markdown(
-                "<div class='demo-note'>Các gợi ý trên chỉ là ví dụ giao diện — "
-                "chưa kết nối retrieval.</div>",
+                "<div class='demo-note'>Câu trả lời dựa trên tài liệu truy xuất, kèm nguồn trích dẫn.</div>",
                 unsafe_allow_html=True,
             )
         else:
@@ -496,12 +506,15 @@ with chat_tab:
                 if msg.get("role") == "user":
                     st.markdown(user_message_html(msg.get("content", "")), unsafe_allow_html=True)
                 else:
+                    if msg.get("error"):
+                        st.error(msg["content"])
+                        continue
                     st.markdown(
                         "<div class='msg'><div class='msg-avatar msg-avatar-bot'>◈</div>"
                         "<div style='flex:1; min-width:0;'>"
                         "<div class='assistant-head'>"
                         "<span class='assistant-name'>PUBG ASSISTANT</span>"
-                        "<span class='mock-tag'>UI PREVIEW · DEMO</span>"
+                        "<span class='ret-pill ret-live'>LIVE</span>"
                         "</div>",
                         unsafe_allow_html=True,
                     )
@@ -513,8 +526,8 @@ with chat_tab:
                         assistant_message_html(
                             msg.get("content", ""),
                             sources=visible_sources,
-                            retrieval_method=msg.get("retrieval_method", "hybrid (demo)"),
-                            is_mock=msg.get("is_mock", True),
+                            retrieval_method=msg.get("retrieval_method", "hybrid"),
+                            is_mock=msg.get("is_mock", False),
                         ),
                         unsafe_allow_html=True,
                     )
@@ -550,13 +563,13 @@ with chat_tab:
             with clear_col:
                 cleared = st.form_submit_button("✕ Xóa chat", use_container_width=True)
             with hint_col:
-                st.caption("Enter để xuống dòng · Nhấn **Gửi** để hỏi (demo).")
-        with st.expander("Tùy chọn nâng cao (dành cho backend sau này)", expanded=False):
+                st.caption("Enter để xuống dòng · Nhấn **Gửi** để hỏi.")
+        with st.expander("Tùy chọn nâng cao", expanded=False):
             st.session_state.top_k = st.slider(
-                "Số chunks (top_k — hiện chưa dùng)",
+                "Số chunks (top_k)",
                 3,
-                10,
-                int(st.session_state.top_k),
+                5,
+                min(int(st.session_state.top_k), 5),
                 disabled=st.session_state.is_loading,
             )
         st.markdown("</div>", unsafe_allow_html=True)  # close composer-zone
@@ -583,8 +596,8 @@ with flow_tab:
 st.markdown(
     """
 <div class="pubg-footer">
-  <span>◈ Chat: UI Preview · Luồng truy xuất: Dense / BM25 / RRF thật.</span>
-  <span>Kết nối sau tại <code>src/task10_generation:generate_with_citation</code> qua <code>src/ui_backend.ask_question</code></span>
+  <span>◈ Chat và luồng truy xuất trực tiếp · Dense / BM25 / RRF.</span>
+  <span>Câu trả lời dựa trên tài liệu, có nguồn trích dẫn.</span>
 </div>
 """,
     unsafe_allow_html=True,
