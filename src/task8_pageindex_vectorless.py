@@ -32,13 +32,26 @@ def upload_documents() -> None:
 
 
 def pageindex_search(query: str, top_k: int = 5) -> list[dict]:
-    """Trả về pageindex SearchResult."""
+    """Trả về pageindex SearchResult.
+
+    Raise RuntimeError nếu API key không được cấu hình hoặc provider lỗi,
+    để Task 9 có thể xử lý graceful degradation.
+    """
+    if not PAGEINDEX_API_KEY:
+        raise RuntimeError(
+            "PAGEINDEX_API_KEY không được cấu hình. "
+            "Pipeline sẽ fallback về hybrid results."
+        )
+
     # TODO: Query các document IDs và parse retrieved nodes.
     #
     # Mỗi result cần: id, content, score, metadata, retrieval_method.
     # Nếu API không trả score, có thể gán score giảm dần theo rank.
-    raise NotImplementedError("Implement pageindex_search")
+    raise NotImplementedError(
+        "Implement pageindex_search với PAGEINDEX_API_KEY đã được cấu hình"
+    )
 
 
 if __name__ == "__main__":
     upload_documents()
+
