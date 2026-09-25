@@ -77,6 +77,7 @@ def portrait_html(
         f"<div class='portrait-col portrait-{safe_side}'>"
         f"<div class='portrait-frame'>"
         f"<img class='portrait-img' src='{uri}' alt='Chân dung {safe_name}' />"
+        f"<div class='portrait-fade-inner portrait-fade-inner-{safe_side}'></div>"
         f"<div class='portrait-fade'></div>"
         f"</div>"
         f"<div class='portrait-label'>{safe_name}</div>"

@@ -82,25 +82,30 @@ html,body,[data-testid="stAppViewContainer"],[data-testid="stApp"]{
 button{font-family:inherit !important;}
 button:focus-visible, textarea:focus-visible, input:focus-visible{
   outline:2px solid var(--gold) !important; outline-offset:2px;}
-.stButton>button{min-height:44px; border-radius:12px !important;
-  border:1px solid var(--line) !important; background:#141b22 !important;
-  color:var(--text) !important; transition:border-color .18s, background .18s, transform .18s;}
-.stButton>button:hover{border-color:rgba(226,179,76,.55) !important;
-  background:#182029 !important;}
-.stButton>button:disabled{opacity:.55; cursor:wait;}
-.stTextArea textarea{background:#0b0f14 !important; color:var(--text) !important;
-  border:1px solid var(--line) !important; border-radius:14px !important;
-  font-size:16px !important; line-height:1.55 !important;}
+.stButton>button, .stFormSubmitButton>button{min-height:40px; border-radius:999px !important;
+  border:1px solid var(--line) !important; background:rgba(255,255,255,.03) !important;
+  color:var(--text) !important; font-size:13.5px !important; line-height:1.5 !important;
+  padding:8px 16px !important; transition:border-color .18s, background .18s;}
+.stButton>button:hover, .stFormSubmitButton>button:hover{
+  border-color:rgba(226,179,76,.55) !important; background:rgba(226,179,76,.08) !important;}
+.stButton>button:disabled, .stFormSubmitButton>button:disabled{opacity:.55; cursor:wait;}
+.stFormSubmitButton>button[kind="primary"]{background:var(--gold-soft) !important;
+  border-color:rgba(226,179,76,.55) !important; color:var(--gold) !important; font-weight:800;}
+.stTextArea textarea{background:rgba(11,15,20,.85) !important; color:var(--text) !important;
+  border:1px solid var(--line) !important; border-radius:18px !important;
+  font-size:16px !important; line-height:1.55 !important; backdrop-filter:blur(8px);}
+.stTextArea textarea:focus{border-color:rgba(226,179,76,.6) !important;
+  box-shadow:0 0 0 1px rgba(226,179,76,.35) !important;}
 .stTextArea textarea::placeholder{color:var(--faint) !important;}
 
 /* Header */
 .pubg-header{display:flex; align-items:flex-start; justify-content:space-between;
-  gap:16px; padding:20px 4px 14px; border-bottom:1px solid var(--line-soft);
-  margin-bottom:18px; flex-wrap:wrap;}
-.pubg-kicker{font-size:11px; letter-spacing:.28em; color:var(--gold);
-  font-weight:700; margin-bottom:6px;}
-.pubg-title{font-size:30px; font-weight:800; letter-spacing:.01em; margin:0; color:#fff;}
-.pubg-sub{color:var(--muted); font-size:14.5px; margin:6px 0 0; max-width:640px;}
+  gap:16px; padding:14px 4px 12px; border-bottom:1px solid var(--line-soft);
+  margin-bottom:14px; flex-wrap:wrap;}
+.pubg-kicker{font-size:10.5px; letter-spacing:.28em; color:var(--gold);
+  font-weight:700; margin-bottom:4px;}
+.pubg-title{font-size:24px; font-weight:800; letter-spacing:.01em; margin:0; color:#fff;}
+.pubg-sub{color:var(--muted); font-size:13.5px; margin:4px 0 0; max-width:640px;}
 .pubg-badges{display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding-top:6px;}
 .badge{font-size:12px; font-weight:700; letter-spacing:.08em; padding:7px 12px;
   border-radius:999px; border:1px solid var(--line); color:var(--muted);
@@ -109,20 +114,19 @@ button:focus-visible, textarea:focus-visible, input:focus-visible{
   background:var(--gold-soft);}
 
 /* Layout helpers */
-.center-wrap{max-width:820px; margin:0 auto; width:100%;}
-.chat-shell{background:linear-gradient(180deg, rgba(255,255,255,.028), rgba(255,255,255,.008)),
-  var(--panel); border:1px solid var(--line); border-radius:18px;
-  box-shadow:0 24px 70px rgba(0,0,0,.5); overflow:hidden;}
-.chat-scroll{padding:22px 22px 8px;}
-.composer-zone{position:sticky; bottom:10px; z-index:6; padding:10px 18px 16px;
-  background:linear-gradient(180deg, rgba(13,17,22,0), var(--panel) 32%);
-  border-top:1px solid var(--line-soft);}
+.center-wrap{max-width:780px; margin:0 auto; width:100%;}
+.chat-shell{background:transparent; border:none; box-shadow:none; overflow:visible;}
+.chat-scroll{padding:8px 6px;}
+.composer-zone{position:sticky; bottom:10px; z-index:6; margin-top:10px;
+  padding:12px; background:rgba(10,13,17,.82); backdrop-filter:blur(12px);
+  border:1px solid var(--line); border-radius:22px;
+  box-shadow:0 18px 50px rgba(0,0,0,.5);}
 
 /* Empty state */
-.empty-hero{text-align:center; padding:40px 28px 10px;}
-.empty-eyebrow{font-size:11px; letter-spacing:.3em; color:var(--faint); font-weight:700;}
-.empty-hero h2{font-size:27px; margin:10px 0 8px; color:#fff; font-weight:800;}
-.empty-hero p{color:var(--muted); font-size:15px; margin:0 auto; max-width:560px;}
+.empty-hero{text-align:center; padding:30px 20px 6px;}
+.empty-eyebrow{font-size:10.5px; letter-spacing:.3em; color:var(--faint); font-weight:700;}
+.empty-hero h2{font-size:24px; margin:8px 0 6px; color:#fff; font-weight:800;}
+.empty-hero p{color:var(--muted); font-size:14px; margin:0 auto; max-width:560px;}
 .example-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:18px 22px 6px;}
 .example-card{text-align:left; width:100%; border:1px solid var(--line) !important;
   background:rgba(255,255,255,.025) !important; border-radius:14px !important;
@@ -187,6 +191,9 @@ button:focus-visible, textarea:focus-visible, input:focus-visible{
   mask-image:radial-gradient(ellipse 88% 86% at 50% 40%, #000 60%, transparent 98%);}
 .portrait-fade{position:absolute; inset:auto 0 0 0; height:120px; pointer-events:none;
   background:linear-gradient(180deg, transparent, var(--bg) 92%);}
+.portrait-fade-inner{position:absolute; inset:0; pointer-events:none;}
+.portrait-fade-inner-left{background:linear-gradient(to left, var(--bg) 0%, transparent 26%);}
+.portrait-fade-inner-right{background:linear-gradient(to right, var(--bg) 0%, transparent 26%);}
 .portrait-label{margin-top:10px; font-size:15px; font-weight:800; letter-spacing:.34em;
   color:#e8ebee; text-indent:.34em;}
 .portrait-sub{font-size:12px; letter-spacing:.18em; color:var(--faint); margin-top:4px;}
@@ -194,8 +201,8 @@ button:focus-visible, textarea:focus-visible, input:focus-visible{
   max-width:240px; line-height:1.5;}
 
 /* Filter + footer */
-.filter-row{display:flex; align-items:center; gap:10px; padding:14px 22px 0; flex-wrap:wrap;}
-.filter-label{font-size:12px; letter-spacing:.16em; color:var(--faint); font-weight:800;}
+.filter-row{display:flex; align-items:center; gap:8px; padding:2px 6px 0; flex-wrap:wrap;}
+.filter-label{font-size:11px; letter-spacing:.16em; color:var(--faint); font-weight:800;}
 .pubg-footer{display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
   color:var(--faint); font-size:12px; padding:16px 6px 0;}
 .loading-dots{color:var(--gold); font-weight:700;}
@@ -250,11 +257,9 @@ st.markdown(
   <div>
     <div class="pubg-kicker">PUBG // ESPORTS KNOWLEDGE</div>
     <h1 class="pubg-title">PUBG Policy Assistant</h1>
-    <p class="pubg-sub">Hỏi về luật chơi, án phạt, hỗ trợ người chơi và các vụ việc PUBG</p>
+    <p class="pubg-sub">Quy tắc · Án phạt · Hỗ trợ · Vụ việc</p>
   </div>
   <div class="pubg-badges">
-    <span class="badge">RAG Assistant</span>
-    <span class="badge">Knowledge Base</span>
     <span class="badge badge-preview">UI Preview</span>
   </div>
 </div>
@@ -403,6 +408,7 @@ with center_col:
         with send_col:
             sent = st.form_submit_button(
                 "➤ Gửi",
+                type="primary",
                 use_container_width=True,
                 disabled=st.session_state.is_loading,
             )
